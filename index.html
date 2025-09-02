@@ -767,116 +767,222 @@
             transform: translateY(-2px);
         }
 
-        /* Proof Construction */
-        .proof-construction {
-            margin: 2rem 0;
+        /* Proof Construction - New Visual Design */
+        .proof-structure {
+            max-width: 700px;
+            margin: 0 auto;
         }
 
-        .construction-controls {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 1.5rem 0;
-            flex-wrap: wrap;
-        }
-
-        .control-btn {
-            padding: 0.6rem 1.2rem;
-            border: 2px solid var(--border-color);
+        .proof-box {
             background: var(--container-bg);
-            color: var(--text-primary);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .control-btn:hover {
-            border-color: var(--primary-color);
-            background: var(--interactive-bg);
-        }
-
-        .control-btn.reset {
-            background: var(--accent-red);
-            color: white;
-            border-color: var(--accent-red);
-        }
-
-        .control-btn.reset:hover {
-            background: #dc2626;
-        }
-
-        /* Proof Workspace */
-        .proof-workspace {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        @media (max-width: 768px) {
-            .proof-workspace {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .proof-column {
-            background: var(--container-bg);
-            border: 2px solid var(--border-color);
+            border: 3px solid var(--border-color);
             border-radius: 12px;
             padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            min-height: 80px;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
-        .proof-column h4 {
-            color: var(--primary-color);
+        .proof-box.base-box {
+            border-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .proof-box.if-then-container {
+            border-color: var(--primary-color);
+            background: rgba(15, 118, 110, 0.05);
+            padding: 1rem;
+        }
+
+        .if-then-label {
             text-align: center;
+            font-weight: 700;
+            color: var(--primary-color);
             margin-bottom: 1rem;
             font-size: 1.1rem;
         }
 
-        .proof-steps {
-            min-height: 300px;
-            background: var(--background);
-            border: 2px dashed var(--border-color);
+        .if-then-boxes {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .if-box, .then-box {
+            background: white;
+            border: 2px solid var(--border-color);
             border-radius: 8px;
             padding: 1rem;
-            transition: all 0.3s ease;
+            min-height: 100px;
+            position: relative;
         }
 
-        .proof-steps.drag-over {
+        .if-box {
+            border-left: 4px solid var(--accent-amber);
+        }
+
+        .then-box {
+            border-left: 4px solid var(--primary-light);
+        }
+
+        .box-label {
+            font-weight: 600;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .proof-box.conclusion-box {
             border-color: var(--primary-color);
-            background: var(--interactive-bg);
+            background: rgba(15, 118, 110, 0.05);
         }
 
-        .proof-step-card {
+        .draggable-content {
             background: var(--container-bg);
             border: 2px solid var(--border-color);
-            border-left: 5px solid var(--primary-color);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 0.8rem;
+            border-radius: 6px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
             cursor: grab;
             transition: all 0.3s ease;
             user-select: none;
         }
 
-        .proof-step-card:hover {
+        .draggable-content:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .proof-step-card:active {
+        .draggable-content:active {
             cursor: grabbing;
         }
 
-        .proof-step-card.error {
-            border-left-color: var(--error-color);
+        .draggable-content.correct {
+            border-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .draggable-content.incorrect {
+            border-color: var(--error-color);
             background: rgba(239, 68, 68, 0.05);
         }
 
-        .proof-step-card.correct {
+        .drop-zone {
+            min-height: 60px;
+            border: 2px dashed var(--border-color);
+            border-radius: 6px;
+            padding: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--primary-color);
+            background: var(--interactive-bg);
+        }
+
+        .drop-zone.filled {
+            border: none;
+            padding: 0;
+            min-height: auto;
+        }
+
+        /* Final Proof Animation */
+        .final-proof {
+            display: none;
+            background: linear-gradient(135deg, var(--interactive-bg), var(--container-bg));
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .final-proof h5 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+
+        .final-proof-step {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        .final-proof-step.base {
             border-left-color: var(--success-color);
-            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .final-proof-step.hypothesis {
+            border-left-color: var(--accent-amber);
+        }
+
+        .final-proof-step.induction {
+            border-left-color: var(--primary-light);
+        }
+
+        /* Check and Reset Buttons */
+        .proof-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .proof-btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .proof-btn.check {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .proof-btn.check:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .proof-btn.hint {
+            background: var(--accent-amber);
+            color: white;
+        }
+
+        .proof-btn.hint:hover {
+            background: #dc8e0a;
+            transform: translateY(-2px);
+        }
+
+        .proof-btn.reset {
+            background: var(--accent-red);
+            color: white;
+        }
+
+        .proof-btn.reset:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
         }
 
         /* Feedback Display */
@@ -909,17 +1015,7 @@
             border: 2px solid var(--primary-color);
         }
 
-        /* Success Message */
-        .success-message {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success-color);
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-            margin-top: 1rem;
-            display: none;
-        }
+        /* Success Message - Removed (using final-proof instead) */
 
         /* Navigation Buttons */
         .nav-buttons {
@@ -1125,23 +1221,23 @@
 
                 <div class="formal-intro">
                     <h4>Mathematical Induction Framework</h4>
-                    <p>To prove a statement P(n) for all positive integers n ≥ k:</p>
+                    <p>To prove a statement P(n) for all integers n ≥ n₀:</p>
                     
                     <div class="induction-components">
                         <div class="component-box base-case">
                             <div class="component-title">Base Case</div>
-                            <p>Prove P(k) is true</p>
+                            <p>Prove P(n₀) is true</p>
                             <p><em>Verify the statement for the starting value</em></p>
                         </div>
                         
                         <div class="component-box inductive-step">
                             <div class="component-title">Inductive Step</div>
-                            <p>Assume P(n) is true, then prove P(n+1) is true</p>
-                            <p><em>Show the pattern continues from any case to the next</em></p>
+                            <p>Assume P(k) is true, then prove P(k+1) is true</p>
+                            <p><em>Show: if the pattern holds for k, then it holds for k+1</em></p>
                         </div>
                     </div>
                     
-                    <p><strong>Conclusion:</strong> P(n) is true for all integers n ≥ k</p>
+                    <p><strong>Conclusion:</strong> P(n) is true for all integers n ≥ n₀</p>
                 </div>
 
                 <div class="example-toggle">
@@ -1380,27 +1476,52 @@
 
                     <div id="proof-construction" class="proof-construction" style="display: none;">
                         <h5>Step 2: Arrange the Proof Steps</h5>
-                        <p>Drag the steps into the correct logical order to complete the induction proof:</p>
+                        <p>Drag the proof components into their correct positions to build a valid induction proof:</p>
                         
-                        <div class="construction-controls">
-                            <button class="control-btn" onclick="showHint()">💡 Show Hint</button>
-                            <button class="control-btn" onclick="checkProofOrder()">✅ Check Order</button>
-                            <button class="control-btn reset" onclick="resetProof()">🔄 Reset</button>
+                        <div class="proof-structure">
+                            <!-- Base Case Box -->
+                            <div class="proof-box base-box">
+                                <div class="box-label">Base Case</div>
+                                <div class="drop-zone" id="base-drop"></div>
+                            </div>
+
+                            <!-- If-Then Structure -->
+                            <div class="proof-box if-then-container">
+                                <div class="if-then-label">Inductive Step: If → Then Structure</div>
+                                <div class="if-then-boxes">
+                                    <div class="if-box">
+                                        <div class="box-label">If P(k) is true...</div>
+                                        <div class="drop-zone" id="hypothesis-drop"></div>
+                                    </div>
+                                    <div class="then-box">
+                                        <div class="box-label">Then P(k+1) is true</div>
+                                        <div class="drop-zone" id="induction-drop"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Conclusion Box -->
+                            <div class="proof-box conclusion-box">
+                                <div class="box-label">Conclusion</div>
+                                <div class="drop-zone" id="conclusion-drop"></div>
+                            </div>
+
+                            <!-- Available Proof Pieces (Scrambled) -->
+                            <div class="proof-box">
+                                <div class="box-label">Available Proof Components (drag these to correct positions)</div>
+                                <div id="available-pieces"></div>
+                            </div>
                         </div>
 
-                        <div class="proof-workspace">
-                            <div class="proof-column">
-                                <h4>Available Steps</h4>
-                                <div class="proof-steps" id="available-steps"></div>
-                            </div>
-                            <div class="proof-column">
-                                <h4>Your Proof</h4>
-                                <div class="proof-steps" id="your-proof"></div>
-                            </div>
+                        <div class="proof-controls">
+                            <button class="proof-btn hint" onclick="showProofHint()">💡 Hint</button>
+                            <button class="proof-btn check" onclick="checkProofStructure()">✅ Check Proof</button>
+                            <button class="proof-btn reset" onclick="resetProofStructure()">🔄 Reset</button>
                         </div>
 
-                        <div class="success-message" id="success-message">
-                            Excellent! Your induction proof is logically correct!
+                        <div class="final-proof" id="final-proof">
+                            <h5>✨ Complete Proof by Mathematical Induction</h5>
+                            <div id="final-proof-content"></div>
                         </div>
                     </div>
                 </div>
@@ -1460,7 +1581,6 @@
         // Initialize
         function init() {
             setupTabs();
-            setupDragAndDrop();
             
             // Typeset initial math
             if (window.MathJax && window.MathJax.typesetPromise) {
@@ -1682,7 +1802,6 @@
             }
             
             const userInput = document.getElementById('base-case-input').value.trim().toLowerCase();
-            const correctBase = state.currentProblem.baseCase.toLowerCase();
             const correctValue = state.currentProblem.baseValue;
             const feedbackDiv = document.getElementById('base-case-feedback');
             
@@ -1703,80 +1822,126 @@
                 document.getElementById('proof-construction').style.display = 'block';
                 populateProofSteps();
             } else {
-                feedbackDiv.className = 'feedback-display error';
-                feedbackDiv.innerHTML = `
-                    <strong>Not quite.</strong><br>
-                    The base case should be: ${state.currentProblem.baseCase}<br>
-                    This is the smallest value where the statement should hold true.
-                `;
+                // Provide hints instead of giving the answer
+                feedbackDiv.className = 'feedback-display info';
+                const userValue = parseInt(userInput.match(/\d+/)?.[0]);
+                
+                if (isNaN(userValue)) {
+                    feedbackDiv.innerHTML = `
+                        <strong>Hint:</strong><br>
+                        Look for the smallest positive integer where the statement should hold.
+                        Try testing n = 1, n = 0, or n = 2.
+                    `;
+                } else if (userValue < correctValue) {
+                    feedbackDiv.innerHTML = `
+                        <strong>Too small!</strong><br>
+                        Check if the statement actually makes sense for n = ${userValue}.
+                        Try a slightly larger value.
+                    `;
+                } else if (userValue > correctValue) {
+                    feedbackDiv.innerHTML = `
+                        <strong>Too large!</strong><br>
+                        While the statement is true for n = ${userValue}, 
+                        there's a smaller value where it also holds. 
+                        Remember, we want the smallest such value.
+                    `;
+                }
             }
         }
 
         function populateProofSteps() {
-            const availableSteps = document.getElementById('available-steps');
-            availableSteps.innerHTML = '';
+            const availablePieces = document.getElementById('available-pieces');
+            availablePieces.innerHTML = '';
             
-            // Shuffle the steps
-            const shuffledSteps = [...state.currentProblem.steps].sort(() => Math.random() - 0.5);
+            // Create proof components based on the problem
+            const components = [
+                { type: 'base', content: state.currentProblem.steps[0], correctZone: 'base-drop' },
+                { type: 'hypothesis', content: state.currentProblem.steps[1] + ' ' + state.currentProblem.steps[2], correctZone: 'hypothesis-drop' },
+                { type: 'induction', content: state.currentProblem.steps.slice(3, -1).join(' '), correctZone: 'induction-drop' },
+                { type: 'conclusion', content: state.currentProblem.steps[state.currentProblem.steps.length - 1], correctZone: 'conclusion-drop' }
+            ];
             
-            shuffledSteps.forEach((step, index) => {
-                const stepEl = document.createElement('div');
-                stepEl.className = 'proof-step-card';
-                stepEl.draggable = true;
-                stepEl.textContent = step;
-                stepEl.setAttribute('data-step', step);
-                stepEl.setAttribute('data-index', state.currentProblem.steps.indexOf(step));
-                availableSteps.appendChild(stepEl);
+            // Shuffle the components
+            const shuffled = [...components].sort(() => Math.random() - 0.5);
+            
+            shuffled.forEach((component, index) => {
+                const piece = document.createElement('div');
+                piece.className = 'draggable-content';
+                piece.draggable = true;
+                piece.textContent = component.content;
+                piece.setAttribute('data-type', component.type);
+                piece.setAttribute('data-correct-zone', component.correctZone);
+                piece.setAttribute('data-id', `piece-${index}`);
+                availablePieces.appendChild(piece);
             });
             
-            // Clear your proof area
-            document.getElementById('your-proof').innerHTML = '';
-            document.getElementById('success-message').style.display = 'none';
+            // Clear all drop zones
+            ['base-drop', 'hypothesis-drop', 'induction-drop', 'conclusion-drop'].forEach(zoneId => {
+                document.getElementById(zoneId).innerHTML = '';
+                document.getElementById(zoneId).classList.remove('filled');
+            });
+            
+            document.getElementById('final-proof').style.display = 'none';
+            
+            // Setup new drag and drop
+            setupProofDragDrop();
             
             // Typeset math
             if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([availableSteps]);
+                window.MathJax.typesetPromise([availablePieces]);
             }
         }
 
-        // Drag and drop functionality
-        function setupDragAndDrop() {
-            document.addEventListener('dragstart', (e) => {
-                if (e.target.classList.contains('proof-step-card')) {
+        function setupProofDragDrop() {
+            const draggables = document.querySelectorAll('.draggable-content');
+            const dropZones = document.querySelectorAll('.drop-zone');
+            
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (e) => {
                     state.draggedElement = e.target;
                     e.target.style.opacity = '0.5';
-                }
-            });
-
-            document.addEventListener('dragend', (e) => {
-                if (e.target.classList.contains('proof-step-card')) {
-                    e.target.style.opacity = '1';
-                }
-            });
-
-            // Setup drop zones
-            const dropZones = ['available-steps', 'your-proof'];
-            dropZones.forEach(zoneId => {
-                const zone = document.getElementById(zoneId);
-                if (!zone) return;
+                });
                 
+                draggable.addEventListener('dragend', (e) => {
+                    e.target.style.opacity = '1';
+                });
+            });
+            
+            dropZones.forEach(zone => {
                 zone.addEventListener('dragover', (e) => {
                     e.preventDefault();
                     zone.classList.add('drag-over');
                 });
-
+                
                 zone.addEventListener('dragleave', (e) => {
                     if (!zone.contains(e.relatedTarget)) {
                         zone.classList.remove('drag-over');
                     }
                 });
-
+                
                 zone.addEventListener('drop', (e) => {
                     e.preventDefault();
                     zone.classList.remove('drag-over');
                     
-                    if (state.draggedElement && !zone.contains(state.draggedElement)) {
+                    if (state.draggedElement && zone.children.length === 0) {
+                        // Clear the element from its previous location if any
+                        const previousParent = state.draggedElement.parentElement;
+                        if (previousParent && previousParent.classList.contains('drop-zone')) {
+                            previousParent.classList.remove('filled');
+                        }
+                        
                         zone.appendChild(state.draggedElement);
+                        zone.classList.add('filled');
+                        
+                        // Check if this is the correct placement
+                        const correctZone = state.draggedElement.getAttribute('data-correct-zone');
+                        if (zone.id === correctZone) {
+                            state.draggedElement.classList.add('correct');
+                            state.draggedElement.classList.remove('incorrect');
+                        } else {
+                            state.draggedElement.classList.add('incorrect');
+                            state.draggedElement.classList.remove('correct');
+                        }
                     }
                     
                     state.draggedElement = null;
@@ -1784,69 +1949,90 @@
             });
         }
 
-        function showHint() {
+        function checkProofStructure() {
+            const zones = ['base-drop', 'hypothesis-drop', 'induction-drop', 'conclusion-drop'];
+            let allCorrect = true;
+            let emptyZones = [];
+            
+            zones.forEach(zoneId => {
+                const zone = document.getElementById(zoneId);
+                const content = zone.querySelector('.draggable-content');
+                
+                if (!content) {
+                    allCorrect = false;
+                    emptyZones.push(zoneId.replace('-drop', ''));
+                } else {
+                    const correctZone = content.getAttribute('data-correct-zone');
+                    if (correctZone !== zoneId) {
+                        allCorrect = false;
+                    }
+                }
+            });
+            
+            if (emptyZones.length > 0) {
+                alert(`Please fill all sections! Missing: ${emptyZones.join(', ')}`);
+                return;
+            }
+            
+            if (allCorrect) {
+                // Show success and animate to final proof
+                showFinalProof();
+            } else {
+                alert('Not quite right! Check which components are marked in red and try moving them to different positions.');
+            }
+        }
+
+        function showFinalProof() {
+            const finalProof = document.getElementById('final-proof');
+            const finalContent = document.getElementById('final-proof-content');
+            
+            finalContent.innerHTML = `
+                <div class="final-proof-step base">
+                    <strong>Base Case (n = ${state.currentProblem.baseValue}):</strong><br>
+                    ${state.currentProblem.steps[0]}
+                </div>
+                <div class="final-proof-step hypothesis">
+                    <strong>Inductive Hypothesis:</strong><br>
+                    ${state.currentProblem.steps[1]} ${state.currentProblem.steps[2]}
+                </div>
+                <div class="final-proof-step induction">
+                    <strong>Inductive Step:</strong><br>
+                    ${state.currentProblem.steps.slice(3, -1).join('<br>')}
+                </div>
+                <div class="final-proof-step">
+                    <strong>Conclusion:</strong><br>
+                    ${state.currentProblem.steps[state.currentProblem.steps.length - 1]}
+                </div>
+            `;
+            
+            finalProof.style.display = 'block';
+            finalProof.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Typeset math
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([finalContent]);
+            }
+        }
+
+        function resetProofStructure() {
+            populateProofSteps();
+        }
+
+        function showProofHint() {
             if (!state.currentProblem) {
                 alert('Please generate a problem first!');
                 return;
             }
-            alert(`Hint: ${state.currentProblem.hint}`);
-        }
-
-        function checkProofOrder() {
-            const yourProof = document.getElementById('your-proof');
-            const userSteps = Array.from(yourProof.children).map(step => 
-                parseInt(step.getAttribute('data-index'))
-            );
-            const correctOrder = state.currentProblem.steps.map((_, index) => index);
-
-            // Clear previous feedback
-            document.querySelectorAll('.proof-step-card').forEach(step => {
-                step.classList.remove('error', 'correct');
-            });
-
-            let isCorrect = true;
-            let firstError = -1;
-
-            for (let i = 0; i < userSteps.length; i++) {
-                if (userSteps[i] !== correctOrder[i]) {
-                    isCorrect = false;
-                    firstError = i;
-                    break;
-                }
-            }
-
-            if (isCorrect && userSteps.length === correctOrder.length) {
-                document.getElementById('success-message').style.display = 'block';
-                Array.from(yourProof.children).forEach(step => {
-                    step.classList.add('correct');
-                });
-            } else {
-                document.getElementById('success-message').style.display = 'none';
-                
-                if (userSteps.length === 0) {
-                    alert('Please arrange some proof steps first!');
-                } else if (firstError >= 0 && firstError < userSteps.length) {
-                    const errorStep = Array.from(yourProof.children)[firstError];
-                    if (errorStep) errorStep.classList.add('error');
-                    alert(`The step at position ${firstError + 1} seems out of place. Check the logical flow!`);
-                } else {
-                    alert('Your proof is incomplete. Make sure you have all the necessary steps!');
-                }
-            }
-        }
-
-        function resetProof() {
-            const yourProof = document.getElementById('your-proof');
-            const availableSteps = document.getElementById('available-steps');
             
-            // Move all steps back to available steps
-            const allSteps = Array.from(yourProof.children);
-            allSteps.forEach(step => {
-                step.classList.remove('error', 'correct');
-                availableSteps.appendChild(step);
-            });
-
-            document.getElementById('success-message').style.display = 'none';
+            const hints = [
+                "The base case should verify the statement for the smallest value of n.",
+                "The inductive hypothesis assumes P(k) is true.",
+                "The inductive step shows that if P(k) is true, then P(k+1) must also be true.",
+                "The conclusion states that the statement holds for all valid values of n."
+            ];
+            
+            const randomHint = hints[Math.floor(Math.random() * hints.length)];
+            alert(`Hint: ${randomHint}\n\nSpecific to this problem: ${state.currentProblem.hint}`);
         }
 
         // Initialize the app
