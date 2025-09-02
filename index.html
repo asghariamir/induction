@@ -1,1 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mathematical Induction | Mathswell</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/logo-mathswell-square-mirror.ico" type="image/x-icon">
+    <link rel="icon" href="/logo-mathswell-square-mirror.svg" type="image/svg+xml">
+    
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                ready: () => {
+                    window.MathJax.startup.defaultReady();
+                }
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0f766e;
+            --primary-light: #10b981;
+            --background: #f7faf9;
+            --accent-amber: #f59e0b;
+            --accent-red: #c62828;
+            --text-primary: #212121;
+            --text-muted: #4b5563;
+            --container-bg: #ffffff;
+            --border-color: #e5e7eb;
+            --interactive-bg: #e6fffb;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+        }
 
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--background);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: var(--container-bg);
+            min-height: 100vh;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        /* Mathswell Navigation */
+        .mathswell-nav {
+            display: flex;
+            justify-content: center;
+            margin: .4rem 0 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .mathswell-nav .mw-link {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary-color);
+            padding: .3rem .7rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,.9);
+            box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        }
+        
+        .mathswell-nav .mw-link img {
+            display: block;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: var(--container-bg);
+            border-bottom: 2px solid var(--border-color);
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 150px;
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .tab-button:hover:not(.active) {
+            background: var(--interactive-bg);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+            padding: 2rem;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Introduction Styles */
+        .intro-section {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .concept-explanation {
+            background: var(--interactive-bg);
+            border-left: 4px solid var(--primary-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .concept-explanation h3 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Domino Visualization for Multiplication */
+        .domino-chain {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .domino {
+            width: 100px;
+            height: 110px;
+            background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            padding: 0.4rem;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            transform-origin: bottom center;
+            line-height: 1.3;
+        }
+
+        .domino:hover {
+            transform: translateY(-3px);
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .domino.falling {
+            animation: dominoFall 0.4s ease-out forwards;
+        }
+
+        @keyframes dominoFall {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(30deg) translateX(10px);
+                background: linear-gradient(145deg, #10b981, #059669);
+                border-color: var(--success-color);
+                color: white;
+            }
+        }
+
+        .domino.blank {
+            border: 2px dashed var(--border-color);
+            background: var(--background);
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 2rem;
+        }
+
+        .domino.blank.falling {
+            animation: dominoFallContinue 0.4s ease-out forwards;
+        }
+
+        @keyframes dominoFallContinue {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(30deg) translateX(10px);
+                background: linear-gradient(145deg, #10b981, #059669);
+                border-color: var(--success-color);
+                color: white;
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+            }
+        }
+
+        /* Card Visualization for Addition */
+        .card-chain {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 110px;
+            height: 120px;
+            background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            padding: 0.3rem;
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            line-height: 1.2;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .card.error {
+            background: linear-gradient(145deg, #ff6b6b, #ef4444);
+            border-color: var(--error-color);
+            color: white;
+            animation: turnRed 0.4s ease;
+        }
+
+        @keyframes turnRed {
+            from {
+                background: linear-gradient(145deg, #f0f0f0, #e0e0e0);
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1) rotate(-2deg);
+            }
+            to {
+                background: linear-gradient(145deg, #ff6b6b, #ef4444);
+                transform: scale(1);
+            }
+        }
+
+        /* Card Containers */
+        .infinite-dominos {
+            background: var(--container-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .infinite-dominos h4 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .property-box {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            background: var(--interactive-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            text-align: left;
+        }
+
+        .property-box h5 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .property-step {
+            margin: 0.8rem 0;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        /* Examples Container */
+        .examples-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .examples-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .example-card {
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .example-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .example-card.true {
+            border-left: 6px solid var(--success-color);
+        }
+
+        .example-card.false {
+            border-left: 6px solid var(--error-color);
+        }
+
+        .example-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .example-visual {
+            background: var(--background);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 2;
+        }
+
+        /* Interactive Test */
+        .test-section {
+            background: var(--container-bg);
+            border: 2px solid var(--error-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .test-section h4 {
+            color: var(--error-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .test-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .test-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--error-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-btn:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            background: var(--background);
+            font-weight: 500;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Connection Box */
+        .connection-box {
+            background: var(--accent-amber);
+            color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .connection-box h4 {
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .connection-box p {
+            margin-bottom: 1rem;
+        }
+
+        /* Formal Introduction */
+        .formal-intro {
+            background: var(--container-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .formal-intro h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        /* Example Toggle */
+        .example-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .toggle-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--background);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .toggle-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .toggle-btn:hover:not(.active) {
+            border-color: var(--primary-color);
+            background: var(--interactive-bg);
+        }
+
+        /* Tree Visualization */
+        .tree-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1.5rem 0;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tree-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tree-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .tree-svg {
+            width: 150px;
+            height: 120px;
+        }
+
+        .tree-vertex {
+            stroke: var(--text-primary);
+            stroke-width: 2;
+        }
+        
+        .tree-vertex-small {
+            stroke: var(--text-primary);
+            stroke-width: 1.5;
+        }
+
+        .tree-vertex.red, .tree-vertex-small.red {
+            fill: #ff6b6b !important;
+        }
+
+        .tree-vertex.blue, .tree-vertex-small.blue {
+            fill: #4dabf7 !important;
+        }
+
+        .tree-edge {
+            stroke: var(--text-primary);
+            stroke-width: 2;
+        }
+
+        /* Induction Components */
+        .induction-components {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .induction-components {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .component-box {
+            background: var(--background);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .component-box.base-case {
+            border-left: 6px solid var(--success-color);
+        }
+
+        .component-box.inductive-step {
+            border-left: 6px solid var(--primary-color);
+        }
+
+        .component-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+        }
+
+        /* Proof Display */
+        .proof-display {
+            background: var(--interactive-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .proof-step {
+            margin-bottom: 0.8rem;
+            padding: 0.5rem 0;
+            border-left: 3px solid transparent;
+            padding-left: 0.8rem;
+        }
+
+        .proof-step.base {
+            border-left-color: var(--success-color);
+        }
+
+        .proof-step.inductive {
+            border-left-color: var(--primary-color);
+        }
+
+        /* AI Practice Section */
+        .practice-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--background);
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .practice-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .control-group select {
+            padding: 0.8rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            font-size: 1rem;
+        }
+
+        .control-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .generate-btn {
+            grid-column: 1 / -1;
+            padding: 1rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            justify-self: center;
+            max-width: 300px;
+        }
+
+        .generate-btn:hover:not(:disabled) {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .generate-btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* Current Problem Display */
+        .current-problem {
+            background: var(--interactive-bg);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .current-problem h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .statement {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+        }
+
+        /* Base Case Practice */
+        .base-case-practice {
+            background: var(--container-bg);
+            border: 2px solid var(--success-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .base-case-practice h5 {
+            color: var(--success-color);
+            margin-bottom: 1rem;
+        }
+
+        .base-case-input {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .base-case-input input {
+            padding: 0.8rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 200px;
+        }
+
+        .base-case-input input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .base-case-input button {
+            padding: 0.8rem 1.5rem;
+            background: var(--success-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .base-case-input button:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* Proof Construction */
+        .proof-construction {
+            margin: 2rem 0;
+        }
+
+        .construction-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid var(--border-color);
+            background: var(--container-bg);
+            color: var(--text-primary);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .control-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--interactive-bg);
+        }
+
+        .control-btn.reset {
+            background: var(--accent-red);
+            color: white;
+            border-color: var(--accent-red);
+        }
+
+        .control-btn.reset:hover {
+            background: #dc2626;
+        }
+
+        /* Proof Workspace */
+        .proof-workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .proof-workspace {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .proof-column {
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .proof-column h4 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .proof-steps {
+            min-height: 300px;
+            background: var(--background);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .proof-steps.drag-over {
+            border-color: var(--primary-color);
+            background: var(--interactive-bg);
+        }
+
+        .proof-step-card {
+            background: var(--container-bg);
+            border: 2px solid var(--border-color);
+            border-left: 5px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            cursor: grab;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+        .proof-step-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .proof-step-card:active {
+            cursor: grabbing;
+        }
+
+        .proof-step-card.error {
+            border-left-color: var(--error-color);
+            background: rgba(239, 68, 68, 0.05);
+        }
+
+        .proof-step-card.correct {
+            border-left-color: var(--success-color);
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        /* Feedback Display */
+        .feedback-display {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .feedback-display.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border: 2px solid var(--success-color);
+        }
+
+        .feedback-display.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border: 2px solid var(--error-color);
+        }
+
+        .feedback-display.info {
+            background: var(--interactive-bg);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* Key Insights */
+        .key-insights {
+            background: var(--container-bg);
+            border: 2px solid var(--accent-amber);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .key-insights h4 {
+            color: var(--accent-amber);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .insight-item {
+            margin-bottom: 1rem;
+            padding-left: 1rem;
+            border-left: 3px solid var(--accent-amber);
+        }
+
+        .insight-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.3rem;
+        }
+
+        /* Warning Notice */
+        .warning-notice {
+            background: rgba(251, 191, 36, 0.1);
+            color: #92400e;
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            border-left: 3px solid var(--accent-amber);
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Math content spacing */
+        .mjx-chtml {
+            margin: 0.2em 0 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Mathswell Navigation Badge -->
+        <div class="mathswell-nav">
+            <a href="/" class="mw-link">
+                <img src="/logo-mathswell-square-mirror.svg" alt="Mathswell" width="28" height="28">
+                <span>MATHSWELL</span>
+            </a>
+        </div>
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Mathematical Induction</h1>
+            <p class="subtitle">Discover why both base case and inductive step are essential through interactive exploration</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-button active" data-tab="introduction">Introduction</button>
+            <button class="tab-button" data-tab="formal">Formal Structure</button>
+            <button class="tab-button" data-tab="practice">AI Practice</button>
+        </div>
+
+        <!-- Introduction Tab -->
+        <div id="introduction" class="tab-content active">
+            <div class="intro-section">
+                <div class="concept-explanation">
+                    <h3>What is Mathematical Induction?</h3>
+                    <p>Mathematical induction proves statements about infinite sets of numbers by showing two things: the statement is true for the first case, and if it's true for any number, it must be true for the next number. You've been using this reasoning naturally your whole mathematical life - when you extend patterns from small numbers to larger ones.</p>
+                </div>
+
+                <div class="infinite-dominos">
+                    <h4>Multiplication Property: Building on the Foundation</h4>
+                    <p>Click the first domino to see how the pattern extends naturally:</p>
+                    
+                    <div class="domino-chain" id="multiplication-dominos">
+                        <div class="domino" data-n="1" onclick="animateDominos()">
+                            $\sqrt{ab}$<br>=<br>$\sqrt{a}\sqrt{b}$
+                        </div>
+                        <div class="domino" data-n="2">
+                            $\sqrt{abc}$<br>=<br>$\sqrt{a}\sqrt{b}\sqrt{c}$
+                        </div>
+                        <div class="domino" data-n="3">
+                            $\sqrt{abcd}$<br>=<br>$\sqrt{a}\sqrt{b}\sqrt{c}\sqrt{d}$
+                        </div>
+                        <div class="domino" data-n="4">
+                            $\sqrt{abcde}$<br>=<br>$\sqrt{a}\sqrt{b}\sqrt{c}\sqrt{d}\sqrt{e}$
+                        </div>
+                        <div class="domino" data-n="5">
+                            ⋯
+                        </div>
+                        <div class="domino" data-n="6">
+                            ⋯
+                        </div>
+                    </div>
+                    
+                    <div id="multiplication-property" class="property-box">
+                        <h5>How the Pattern Extends</h5>
+                        <div class="property-step">
+                            <strong>From 2 to 3 terms:</strong> $\sqrt{abc} = \sqrt{(ab) \cdot c} = \sqrt{ab} \cdot \sqrt{c} = \sqrt{a} \cdot \sqrt{b} \cdot \sqrt{c}$
+                        </div>
+                        <div class="property-step">
+                            <strong>From 3 to 4 terms:</strong> $\sqrt{abcd} = \sqrt{(abc) \cdot d} = \sqrt{abc} \cdot \sqrt{d} = \sqrt{a} \cdot \sqrt{b} \cdot \sqrt{c} \cdot \sqrt{d}$
+                        </div>
+                        <div class="property-step">
+                            <em>This pattern extends naturally because multiplication is associative!</em>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="infinite-dominos" style="margin-top: 3rem;">
+                    <h4>Addition Property: Testing the Pattern</h4>
+                    <p>Click the first card to test if this equality actually holds:</p>
+                    
+                    <div class="card-chain" id="addition-cards">
+                        <div class="card" data-n="1" onclick="animateAdditionCard(1)">
+                            $\sqrt{a+b}$<br>=?<br>$\sqrt{a}+\sqrt{b}$
+                        </div>
+                        <div class="card" data-n="2">
+                            $\sqrt{a+b+c}$<br>=?<br>$\sqrt{a}+\sqrt{b}+\sqrt{c}$
+                        </div>
+                        <div class="card" data-n="3">
+                            $\sqrt{a+b+c+d}$<br>=?<br>$\sqrt{a}+\sqrt{b}+\sqrt{c}+\sqrt{d}$
+                        </div>
+                    </div>
+                    
+                    <div id="addition-property" class="property-box" style="display: none;">
+                        <h5 style="color: var(--error-color);">Why This Fails</h5>
+                        <div class="property-step" style="border-left-color: var(--error-color);">
+                            <strong>Testing the claimed equality:</strong> $\sqrt{4+9} = \sqrt{13} \approx 3.6$ but $\sqrt{4} + \sqrt{9} = 2 + 3 = 5$ ✗
+                        </div>
+                        <div class="property-step" style="border-left-color: var(--error-color);">
+                            <strong>The foundation is false!</strong> Since $\sqrt{a+b} \neq \sqrt{a} + \sqrt{b}$, the claimed pattern doesn't hold.
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="key-insights">
+                    <h4>The Trap Revealed</h4>
+                    <div class="insight-item">
+                        <div class="insight-title">Natural Pattern Extension:</div>
+                        <div>You naturally extend $\sqrt{ab} = \sqrt{a} \cdot \sqrt{b}$ to more terms. The same reasoning seems to apply to addition - "if the pattern works for n terms, it works for n+1 terms."</div>
+                    </div>
+                    <div class="insight-item">
+                        <div class="insight-title">The Missing Foundation:</div>
+                        <div>The inductive step alone isn't enough! You use your current assumption to prove the next case, so you must be absolutely certain about your starting point. Just one failed calculation breaks the entire infinite chain.</div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="switchTab('formal')">Learn Formal Structure →</button>
+                    <button class="nav-btn" onclick="switchTab('practice')">Try AI Practice →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formal Structure Tab -->
+        <div id="formal" class="tab-content">
+            <div class="intro-section">
+                <div class="concept-explanation">
+                    <h3>The Two-Part Structure of Mathematical Induction</h3>
+                    <p>Mathematical induction requires both components to work. Like our square root examples showed, the inductive step alone can mislead you into accepting false statements.</p>
+                </div>
+
+                <div class="formal-intro">
+                    <h4>Mathematical Induction Framework</h4>
+                    <p>To prove a statement P(n) for all positive integers n ≥ k:</p>
+                    
+                    <div class="induction-components">
+                        <div class="component-box base-case">
+                            <div class="component-title">Base Case</div>
+                            <p>Prove P(k) is true</p>
+                            <p><em>Verify the statement for the starting value</em></p>
+                        </div>
+                        
+                        <div class="component-box inductive-step">
+                            <div class="component-title">Inductive Step</div>
+                            <p>Assume P(n) is true, then prove P(n+1) is true</p>
+                            <p><em>Show the pattern continues from any case to the next</em></p>
+                        </div>
+                    </div>
+                    
+                    <p><strong>Conclusion:</strong> P(n) is true for all integers n ≥ k</p>
+                </div>
+
+                <div class="example-toggle">
+                    <button class="toggle-btn active" onclick="showExample('sum')" id="sum-toggle">Sum Formula Example</button>
+                    <button class="toggle-btn" onclick="showExample('tree')" id="tree-toggle">Tree Coloring Example</button>
+                </div>
+
+                <!-- Sum Example -->
+                <div id="sum-example" class="example-card">
+                    <h4>Proof: Sum of First n Odd Numbers</h4>
+                    <p><strong>Statement:</strong> $1 + 3 + 5 + ... + (2n-1) = n^2$ for all positive integers n</p>
+                    
+                    <div class="proof-display">
+                        <div class="proof-step base">
+                            <strong>Base Case (n = 1):</strong><br>
+                            Left side: 1<br>
+                            Right side: $1^2 = 1$ ✓
+                        </div>
+                        
+                        <div class="proof-step inductive">
+                            <strong>Inductive Step:</strong><br>
+                            Assume: $1 + 3 + 5 + ... + (2k-1) = k^2$<br>
+                            Prove: $1 + 3 + 5 + ... + (2k-1) + (2(k+1)-1) = (k+1)^2$<br><br>
+                            Left side = $k^2 + (2k+1)$ (by assumption)<br>
+                            = $k^2 + 2k + 1 = (k+1)^2$ ✓
+                        </div>
+                        
+                        <div class="proof-step">
+                            <strong>Conclusion:</strong> The formula holds for all positive integers n
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tree Coloring Example -->
+                <div id="tree-example" class="example-card" style="display: none;">
+                    <h4>Proof: Every Tree Can Be 2-Colored</h4>
+                    <p><strong>Statement:</strong> Every tree with n vertices can be colored with just 2 colors so that adjacent vertices have different colors</p>
+                    
+                    <div class="tree-visual">
+                        <div class="tree-diagram">
+                            <div class="tree-title">1 vertex</div>
+                            <svg class="tree-svg" viewBox="0 0 150 120">
+                                <circle class="tree-vertex-small red" cx="75" cy="60" r="10"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="tree-diagram">
+                            <div class="tree-title">2 vertices</div>
+                            <svg class="tree-svg" viewBox="0 0 150 120">
+                                <line class="tree-edge" x1="55" y1="60" x2="95" y2="60"/>
+                                <circle class="tree-vertex-small red" cx="55" cy="60" r="10"/>
+                                <circle class="tree-vertex-small blue" cx="95" cy="60" r="10"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="tree-diagram">
+                            <div class="tree-title">3 vertices</div>
+                            <svg class="tree-svg" viewBox="0 0 150 120">
+                                <line class="tree-edge" x1="75" y1="40" x2="55" y2="80"/>
+                                <line class="tree-edge" x1="75" y1="40" x2="95" y2="80"/>
+                                <circle class="tree-vertex-small red" cx="75" cy="40" r="10"/>
+                                <circle class="tree-vertex-small blue" cx="55" cy="80" r="10"/>
+                                <circle class="tree-vertex-small blue" cx="95" cy="80" r="10"/>
+                            </svg>
+                        </div>
+                        
+                        <div class="tree-diagram">
+                            <div class="tree-title">4 vertices</div>
+                            <svg class="tree-svg" viewBox="0 0 150 120">
+                                <line class="tree-edge" x1="75" y1="30" x2="75" y2="60"/>
+                                <line class="tree-edge" x1="75" y1="60" x2="55" y2="90"/>
+                                <line class="tree-edge" x1="75" y1="60" x2="95" y2="90"/>
+                                <circle class="tree-vertex-small red" cx="75" cy="30" r="10"/>
+                                <circle class="tree-vertex-small blue" cx="75" cy="60" r="10"/>
+                                <circle class="tree-vertex-small red" cx="55" cy="90" r="10"/>
+                                <circle class="tree-vertex-small red" cx="95" cy="90" r="10"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <!-- Large Tree Demonstration -->
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <h5 style="color: var(--primary-color); margin-bottom: 1rem;">The Inductive Step Visualized</h5>
+                        <svg width="500" height="350" viewBox="0 0 500 350" style="border: 2px solid var(--border-color); border-radius: 8px; background: var(--background);">
+                            <!-- Tree edges - more complex tree -->
+                            <line class="tree-edge" x1="250" y1="40" x2="200" y2="80"/>
+                            <line class="tree-edge" x1="250" y1="40" x2="300" y2="80"/>
+                            <line class="tree-edge" x1="200" y1="80" x2="150" y2="120"/>
+                            <line class="tree-edge" x1="200" y1="80" x2="220" y2="120"/>
+                            <line class="tree-edge" x1="300" y1="80" x2="280" y2="120"/>
+                            <line class="tree-edge" x1="300" y1="80" x2="330" y2="120"/>
+                            <line class="tree-edge" x1="150" y1="120" x2="130" y2="160"/>
+                            <line class="tree-edge" x1="150" y1="120" x2="170" y2="160"/>
+                            <line class="tree-edge" x1="220" y1="120" x2="200" y2="160"/>
+                            <line class="tree-edge" x1="280" y1="120" x2="260" y2="160"/>
+                            <line class="tree-edge" x1="330" y1="120" x2="350" y2="160"/>
+                            <line class="tree-edge" x1="330" y1="120" x2="380" y2="160"/>
+                            <line class="tree-edge" x1="130" y1="160" x2="110" y2="200"/>
+                            <line class="tree-edge" x1="170" y1="160" x2="190" y2="200"/>
+                            <line class="tree-edge" x1="350" y1="160" x2="360" y2="200"/>
+                            <line class="tree-edge" x1="380" y1="160" x2="400" y2="200"/>
+                            <line class="tree-edge" x1="400" y1="200" x2="420" y2="240"/>
+                            <line class="tree-edge" x1="400" y1="200" x2="390" y2="240"/>
+                            <!-- Highlighted new vertex -->
+                            <line class="tree-edge" x1="420" y1="240" x2="440" y2="280" stroke="var(--accent-amber)" stroke-width="3"/>
+                            
+                            <!-- Tree vertices - properly colored -->
+                            <circle class="tree-vertex-small red" cx="250" cy="40" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="200" cy="80" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="300" cy="80" r="8"/>
+                            <circle class="tree-vertex-small red" cx="150" cy="120" r="8"/>
+                            <circle class="tree-vertex-small red" cx="220" cy="120" r="8"/>
+                            <circle class="tree-vertex-small red" cx="280" cy="120" r="8"/>
+                            <circle class="tree-vertex-small red" cx="330" cy="120" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="130" cy="160" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="170" cy="160" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="200" cy="160" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="260" cy="160" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="350" cy="160" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="380" cy="160" r="8"/>
+                            <circle class="tree-vertex-small red" cx="110" cy="200" r="8"/>
+                            <circle class="tree-vertex-small red" cx="190" cy="200" r="8"/>
+                            <circle class="tree-vertex-small red" cx="360" cy="200" r="8"/>
+                            <circle class="tree-vertex-small red" cx="400" cy="200" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="420" cy="240" r="8"/>
+                            <circle class="tree-vertex-small blue" cx="390" cy="240" r="8"/>
+                            <!-- Highlighted new vertex -->
+                            <circle class="tree-vertex-small red" cx="440" cy="280" r="10" stroke="var(--accent-amber)" stroke-width="3"/>
+                            
+                            <!-- Labels -->
+                            <text x="250" y="20" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="600">
+                                Tree with k vertices (already 2-colored)
+                            </text>
+                            <text x="440" y="305" text-anchor="middle" font-size="12" fill="var(--accent-amber)" font-weight="600">
+                                New vertex
+                            </text>
+                            <text x="440" y="318" text-anchor="middle" font-size="10" fill="var(--accent-amber)">
+                                (connected to only one other vertex)
+                            </text>
+                        </svg>
+                        <p style="margin-top: 1rem; color: var(--text-muted);">
+                            <strong>Strategy:</strong> Any vertex connected to exactly one other vertex can always be colored with the opposite color of its neighbor.
+                        </p>
+                    </div>
+                    
+                    <div class="proof-display">
+                        <div class="proof-step base">
+                            <strong>Base Case (1 vertex):</strong><br>
+                            A single vertex can be colored with one color (trivially 2-colorable) ✓
+                        </div>
+                        
+                        <div class="proof-step inductive">
+                            <strong>Inductive Step:</strong><br>
+                            Assume: Any tree with k vertices can be 2-colored<br>
+                            Prove: Any tree with k+1 vertices can be 2-colored<br><br>
+                            Take any tree T with k+1 vertices. Find any vertex that is connected to exactly one other vertex.<br>
+                            Remove this vertex - the remaining tree has k vertices, so by assumption it's 2-colorable.<br>
+                            Color the removed vertex with the opposite color of its single neighbor ✓
+                        </div>
+                        
+                        <div class="proof-step">
+                            <strong>Conclusion:</strong> Every tree can be 2-colored
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-insights">
+                    <h4>Why Both Parts Matter</h4>
+                    <div class="insight-item">
+                        <div class="insight-title">Base Case:</div>
+                        <div>Ensures your pattern actually starts correctly. You use this foundation to prove the next case, so you must be absolutely certain about it. Many false statements have valid inductive steps but fail at this crucial starting point.</div>
+                    </div>
+                    <div class="insight-item">
+                        <div class="insight-title">Inductive Step:</div>
+                        <div>Ensures the pattern continues consistently. Shows that truth propagates from each case to the next.</div>
+                    </div>
+                    <div class="insight-item">
+                        <div class="insight-title">Together:</div>
+                        <div>They create an unbroken chain of truth from the base case to any finite case you want to reach.</div>
+                    </div>
+                </div>
+
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="switchTab('practice')">Practice with AI →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Practice Tab -->
+        <div id="practice" class="tab-content">
+            <div class="intro-section">
+                <div class="concept-explanation">
+                    <h3>Interactive Proof Construction</h3>
+                    <p>Generate custom induction problems with AI assistance. First identify the base case, then arrange proof steps in logical order.</p>
+                    <p style="font-size: 0.9rem; font-style: italic; color: var(--text-muted); margin-top: 1rem; opacity: 0.9;">
+                        <strong>Note:</strong> The AI helper can make mistakes and may be temporarily unavailable during high traffic periods.
+                    </p>
+                </div>
+
+                <div class="practice-controls">
+                    <div class="control-group">
+                        <label for="statement-type">Statement Type</label>
+                        <select id="statement-type">
+                            <option value="sum-formula">Sum Formula</option>
+                            <option value="inequality">Inequality</option>
+                            <option value="divisibility">Divisibility</option>
+                            <option value="sequence">Sequence Property</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="difficulty">Difficulty</label>
+                        <select id="difficulty">
+                            <option value="basic">Basic</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <button class="generate-btn" id="generate-problem" onclick="generateProblem()">
+                        Generate Problem with AI
+                    </button>
+                </div>
+
+                <div id="current-problem" class="current-problem" style="display: none;">
+                    <h4>Current Problem</h4>
+                    <div class="statement" id="statement-display"></div>
+                    
+                    <div class="base-case-practice">
+                        <h5>Step 1: Identify the Base Case</h5>
+                        <p>What is the smallest value of n for which this statement should be true?</p>
+                        <div class="base-case-input">
+                            <input type="text" id="base-case-input" placeholder="Enter base case value (e.g., n = 1)">
+                            <button id="check-base-case" onclick="checkBaseCase()">Check Base Case</button>
+                        </div>
+                        <div id="base-case-feedback" class="feedback-display" style="display: none;"></div>
+                    </div>
+
+                    <div id="proof-construction" class="proof-construction" style="display: none;">
+                        <h5>Step 2: Arrange the Proof Steps</h5>
+                        <p>Drag the steps into the correct logical order to complete the induction proof:</p>
+                        
+                        <div class="construction-controls">
+                            <button class="control-btn" onclick="showHint()">💡 Show Hint</button>
+                            <button class="control-btn" onclick="checkProofOrder()">✅ Check Order</button>
+                            <button class="control-btn reset" onclick="resetProof()">🔄 Reset</button>
+                        </div>
+
+                        <div class="proof-workspace">
+                            <div class="proof-column">
+                                <h4>Available Steps</h4>
+                                <div class="proof-steps" id="available-steps"></div>
+                            </div>
+                            <div class="proof-column">
+                                <h4>Your Proof</h4>
+                                <div class="proof-steps" id="your-proof"></div>
+                            </div>
+                        </div>
+
+                        <div class="success-message" id="success-message">
+                            Excellent! Your induction proof is logically correct!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let state = {
+            currentProblem: null,
+            draggedElement: null,
+            testResults: {},
+            animationTimeout: null,
+        };
+
+        // Fallback problems when AI is unavailable
+        const fallbackProblems = {
+            'sum-formula-basic': {
+                statement: "For all positive integers n: $1 + 3 + 5 + ... + (2n-1) = n^2$",
+                baseCase: "n = 1",
+                baseValue: 1,
+                hint: "Start by verifying the base case: when n=1, the left side is just 1, and the right side is 1² = 1.",
+                steps: [
+                    "Base Case: When n = 1, LHS = 1 and RHS = 1² = 1 ✓",
+                    "Inductive Hypothesis: Assume the formula holds for n = k",
+                    "That is: 1 + 3 + 5 + ... + (2k-1) = k²",
+                    "Inductive Step: Prove for n = k+1",
+                    "LHS = 1 + 3 + 5 + ... + (2k-1) + (2(k+1)-1)",
+                    "= k² + (2k+1) by the inductive hypothesis",
+                    "= k² + 2k + 1 = (k+1)²",
+                    "Therefore the formula holds for all positive integers n ∎"
+                ]
+            },
+            'inequality-basic': {
+                statement: "For all positive integers n: $2^n > n$",
+                baseCase: "n = 1",
+                baseValue: 1,
+                hint: "Check that 2¹ > 1, then show that if 2ᵏ > k, then 2^(k+1) > k+1.",
+                steps: [
+                    "Base Case: When n = 1, 2¹ = 2 > 1 ✓",
+                    "Inductive Hypothesis: Assume 2ᵏ > k for some k ≥ 1",
+                    "Inductive Step: Prove 2^(k+1) > k+1",
+                    "2^(k+1) = 2 · 2ᵏ",
+                    "By inductive hypothesis: 2 · 2ᵏ > 2k",
+                    "Since k ≥ 1, we have 2k ≥ k+1",
+                    "Therefore: 2^(k+1) > k+1",
+                    "The inequality holds for all positive integers n ∎"
+                ]
+            }
+        };
+
+        // DOM references
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // Initialize
+        function init() {
+            setupTabs();
+            setupDragAndDrop();
+            
+            // Typeset initial math
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // Tab switching
+        function setupTabs() {
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+        }
+
+        function switchTab(tabId) {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Show domino falling animation - always starts from first domino
+        function animateDominos() {
+            const chain = document.getElementById('multiplication-dominos');
+            
+            // Reset all dominos
+            chain.querySelectorAll('.domino').forEach(d => {
+                d.classList.remove('falling');
+            });
+            
+            // Make all dominos fall one after another starting from the first
+            for (let i = 1; i <= 6; i++) {
+                const domino = chain.querySelector(`[data-n="${i}"]`);
+                if (domino) {
+                    setTimeout(() => {
+                        domino.classList.add('falling');
+                    }, (i - 1) * 150);
+                }
+            }
+            
+            // Typeset math
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // Show addition card turning red
+        function animateAdditionCard(n) {
+            const chain = document.getElementById('addition-cards');
+            const propertyBox = document.getElementById('addition-property');
+            
+            // Only the first card can be clicked and turns red
+            if (n === 1) {
+                const card = chain.querySelector(`[data-n="1"]`);
+                card.classList.add('error');
+                
+                // Show the property box explaining why it fails
+                propertyBox.style.display = 'block';
+                
+                // Typeset math
+                if (window.MathJax && window.MathJax.typesetPromise) {
+                    window.MathJax.typesetPromise([propertyBox]);
+                }
+            }
+        }
+
+
+
+        // Example toggle in formal tab
+        function showExample(type) {
+            const sumBtn = document.getElementById('sum-toggle');
+            const treeBtn = document.getElementById('tree-toggle');
+            const sumExample = document.getElementById('sum-example');
+            const treeExample = document.getElementById('tree-example');
+            
+            if (type === 'sum') {
+                sumBtn.classList.add('active');
+                treeBtn.classList.remove('active');
+                sumExample.style.display = 'block';
+                treeExample.style.display = 'none';
+            } else {
+                treeBtn.classList.add('active');
+                sumBtn.classList.remove('active');
+                treeExample.style.display = 'block';
+                sumExample.style.display = 'none';
+            }
+            
+            // Typeset math
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([document.querySelector('#formal .intro-section')]);
+            }
+        }
+
+        // AI integration for practice problems
+        async function callAI(prompt, maxRetries = 2) {
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    if (attempt > 0) {
+                        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                    }
+                    
+                    const response = await fetch('/api/gemini', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            contents: [{ role: "user", parts: [{ text: prompt }] }] 
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!text) {
+                        throw new Error('Empty response from AI');
+                    }
+                    
+                    return text;
+                    
+                } catch (error) {
+                    if (attempt === maxRetries) {
+                        throw error;
+                    }
+                }
+            }
+        }
+
+        function extractJSON(text) {
+            try {
+                return JSON.parse(text);
+            } catch {
+                const jsonMatch = text.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) {
+                    throw new Error('No JSON found in response');
+                }
+                return JSON.parse(jsonMatch[0]);
+            }
+        }
+
+        async function generateProblem() {
+            const statementType = document.getElementById('statement-type').value;
+            const difficulty = document.getElementById('difficulty').value;
+            const generateBtn = document.getElementById('generate-problem');
+            
+            generateBtn.disabled = true;
+            generateBtn.textContent = 'Generating...';
+            
+            document.getElementById('current-problem').style.display = 'block';
+            document.getElementById('statement-display').innerHTML = 'Generating a new induction problem...';
+            
+            const prompt = `
+                Generate a mathematical induction problem suitable for students.
+                
+                Requirements:
+                - Type: ${statementType}
+                - Difficulty: ${difficulty}
+                - Must be provable by mathematical induction
+                - Include clear base case and inductive step
+                
+                Return ONLY valid JSON:
+                {
+                  "statement": "the statement using LaTeX math notation $...$",
+                  "baseCase": "the base case like 'n = 1' or 'n = 0'",
+                  "baseValue": the numeric base value,
+                  "hint": "helpful hint for the proof approach",
+                  "steps": ["step1", "step2", ..., "conclusion ∎"]
+                }
+                
+                The steps should be high-level proof steps, not detailed algebra.
+                Example: "Apply inductive hypothesis" rather than showing all algebraic manipulation.
+            `;
+            
+            try {
+                const response = await callAI(prompt);
+                state.currentProblem = extractJSON(response);
+                
+                document.getElementById('statement-display').innerHTML = state.currentProblem.statement;
+                document.getElementById('base-case-input').value = '';
+                document.getElementById('base-case-feedback').style.display = 'none';
+                document.getElementById('proof-construction').style.display = 'none';
+                
+            } catch (error) {
+                console.error('AI generation failed:', error);
+                
+                // Use fallback
+                const fallbackKey = `${statementType}-${difficulty}`;
+                state.currentProblem = fallbackProblems[fallbackKey] || fallbackProblems['sum-formula-basic'];
+                
+                document.getElementById('statement-display').innerHTML = state.currentProblem.statement;
+                
+                // Show warning
+                const warning = document.createElement('div');
+                warning.className = 'warning-notice';
+                warning.innerHTML = 'Using backup problem (AI temporarily unavailable)';
+                document.getElementById('current-problem').insertBefore(warning, document.getElementById('statement-display'));
+                setTimeout(() => warning.remove(), 5000);
+            }
+            
+            generateBtn.disabled = false;
+            generateBtn.textContent = 'Generate Problem with AI';
+            
+            // Typeset math
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([document.getElementById('statement-display')]);
+            }
+        }
+
+        function checkBaseCase() {
+            if (!state.currentProblem) {
+                alert('Please generate a problem first!');
+                return;
+            }
+            
+            const userInput = document.getElementById('base-case-input').value.trim().toLowerCase();
+            const correctBase = state.currentProblem.baseCase.toLowerCase();
+            const correctValue = state.currentProblem.baseValue;
+            const feedbackDiv = document.getElementById('base-case-feedback');
+            
+            feedbackDiv.style.display = 'block';
+            
+            // Check if user input contains the correct base value
+            const hasCorrectValue = userInput.includes(correctValue.toString()) || 
+                                    userInput.includes(`n = ${correctValue}`) || 
+                                    userInput.includes(`n=${correctValue}`);
+            
+            if (hasCorrectValue) {
+                feedbackDiv.className = 'feedback-display success';
+                feedbackDiv.innerHTML = `
+                    <strong>Correct!</strong><br>
+                    Base case: ${state.currentProblem.baseCase}<br>
+                    Now let's construct the complete proof!
+                `;
+                document.getElementById('proof-construction').style.display = 'block';
+                populateProofSteps();
+            } else {
+                feedbackDiv.className = 'feedback-display error';
+                feedbackDiv.innerHTML = `
+                    <strong>Not quite.</strong><br>
+                    The base case should be: ${state.currentProblem.baseCase}<br>
+                    This is the smallest value where the statement should hold true.
+                `;
+            }
+        }
+
+        function populateProofSteps() {
+            const availableSteps = document.getElementById('available-steps');
+            availableSteps.innerHTML = '';
+            
+            // Shuffle the steps
+            const shuffledSteps = [...state.currentProblem.steps].sort(() => Math.random() - 0.5);
+            
+            shuffledSteps.forEach((step, index) => {
+                const stepEl = document.createElement('div');
+                stepEl.className = 'proof-step-card';
+                stepEl.draggable = true;
+                stepEl.textContent = step;
+                stepEl.setAttribute('data-step', step);
+                stepEl.setAttribute('data-index', state.currentProblem.steps.indexOf(step));
+                availableSteps.appendChild(stepEl);
+            });
+            
+            // Clear your proof area
+            document.getElementById('your-proof').innerHTML = '';
+            document.getElementById('success-message').style.display = 'none';
+            
+            // Typeset math
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([availableSteps]);
+            }
+        }
+
+        // Drag and drop functionality
+        function setupDragAndDrop() {
+            document.addEventListener('dragstart', (e) => {
+                if (e.target.classList.contains('proof-step-card')) {
+                    state.draggedElement = e.target;
+                    e.target.style.opacity = '0.5';
+                }
+            });
+
+            document.addEventListener('dragend', (e) => {
+                if (e.target.classList.contains('proof-step-card')) {
+                    e.target.style.opacity = '1';
+                }
+            });
+
+            // Setup drop zones
+            const dropZones = ['available-steps', 'your-proof'];
+            dropZones.forEach(zoneId => {
+                const zone = document.getElementById(zoneId);
+                if (!zone) return;
+                
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('drag-over');
+                });
+
+                zone.addEventListener('dragleave', (e) => {
+                    if (!zone.contains(e.relatedTarget)) {
+                        zone.classList.remove('drag-over');
+                    }
+                });
+
+                zone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    zone.classList.remove('drag-over');
+                    
+                    if (state.draggedElement && !zone.contains(state.draggedElement)) {
+                        zone.appendChild(state.draggedElement);
+                    }
+                    
+                    state.draggedElement = null;
+                });
+            });
+        }
+
+        function showHint() {
+            if (!state.currentProblem) {
+                alert('Please generate a problem first!');
+                return;
+            }
+            alert(`Hint: ${state.currentProblem.hint}`);
+        }
+
+        function checkProofOrder() {
+            const yourProof = document.getElementById('your-proof');
+            const userSteps = Array.from(yourProof.children).map(step => 
+                parseInt(step.getAttribute('data-index'))
+            );
+            const correctOrder = state.currentProblem.steps.map((_, index) => index);
+
+            // Clear previous feedback
+            document.querySelectorAll('.proof-step-card').forEach(step => {
+                step.classList.remove('error', 'correct');
+            });
+
+            let isCorrect = true;
+            let firstError = -1;
+
+            for (let i = 0; i < userSteps.length; i++) {
+                if (userSteps[i] !== correctOrder[i]) {
+                    isCorrect = false;
+                    firstError = i;
+                    break;
+                }
+            }
+
+            if (isCorrect && userSteps.length === correctOrder.length) {
+                document.getElementById('success-message').style.display = 'block';
+                Array.from(yourProof.children).forEach(step => {
+                    step.classList.add('correct');
+                });
+            } else {
+                document.getElementById('success-message').style.display = 'none';
+                
+                if (userSteps.length === 0) {
+                    alert('Please arrange some proof steps first!');
+                } else if (firstError >= 0 && firstError < userSteps.length) {
+                    const errorStep = Array.from(yourProof.children)[firstError];
+                    if (errorStep) errorStep.classList.add('error');
+                    alert(`The step at position ${firstError + 1} seems out of place. Check the logical flow!`);
+                } else {
+                    alert('Your proof is incomplete. Make sure you have all the necessary steps!');
+                }
+            }
+        }
+
+        function resetProof() {
+            const yourProof = document.getElementById('your-proof');
+            const availableSteps = document.getElementById('available-steps');
+            
+            // Move all steps back to available steps
+            const allSteps = Array.from(yourProof.children);
+            allSteps.forEach(step => {
+                step.classList.remove('error', 'correct');
+                availableSteps.appendChild(step);
+            });
+
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
