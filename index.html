@@ -1133,7 +1133,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Mathswell Navigation Badge -->
         <div class="mathswell-nav">
             <a href="/" class="mw-link">
                 <img src="/logo-mathswell-square-mirror.svg" alt="Mathswell" width="28" height="28">
@@ -1141,20 +1140,17 @@
             </a>
         </div>
 
-        <!-- Header -->
         <div class="header">
             <h1>Mathematical Induction</h1>
             <p class="subtitle">Discover why both base case and inductive step are essential through interactive exploration</p>
         </div>
 
-        <!-- Tabs -->
         <div class="tabs">
             <button class="tab-button active" data-tab="introduction">Introduction</button>
             <button class="tab-button" data-tab="formal">Formal Structure</button>
             <button class="tab-button" data-tab="practice">AI Practice</button>
         </div>
 
-        <!-- Introduction Tab -->
         <div id="introduction" class="tab-content active">
             <div class="intro-section">
                 <div class="concept-explanation">
@@ -1249,7 +1245,6 @@
             </div>
         </div>
 
-        <!-- Formal Structure Tab -->
         <div id="formal" class="tab-content">
             <div class="intro-section">
                 <div class="concept-explanation">
@@ -1283,7 +1278,6 @@
                     <button class="toggle-btn" onclick="showExample('tree')" id="tree-toggle">Tree Coloring Example</button>
                 </div>
 
-                <!-- Sum Example -->
                 <div id="sum-example" class="example-card">
                     <h4>Proof: Sum of First n Odd Numbers</h4>
                     <p><strong>Statement:</strong> $1 + 3 + 5 + ... + (2n-1) = n^2$ for all positive integers n</p>
@@ -1309,7 +1303,6 @@
                     </div>
                 </div>
 
-                <!-- Tree Coloring Example -->
                 <div id="tree-example" class="example-card" style="display: none;">
                     <h4>Proof: Every Tree Can Be 2-Colored</h4>
                     <p><strong>Statement:</strong> Every tree with n vertices can be colored with just 2 colors so that adjacent vertices have different colors</p>
@@ -1356,11 +1349,9 @@
                         </div>
                     </div>
                     
-                    <!-- Large Tree Demonstration -->
                     <div style="text-align: center; margin: 2rem 0;">
                         <h5 style="color: var(--primary-color); margin-bottom: 1rem;">The Inductive Step Visualized</h5>
                         <svg width="500" height="350" viewBox="0 0 500 350" style="border: 2px solid var(--border-color); border-radius: 8px; background: var(--background);">
-                            <!-- Tree edges - more complex tree -->
                             <line class="tree-edge" x1="250" y1="40" x2="200" y2="80"/>
                             <line class="tree-edge" x1="250" y1="40" x2="300" y2="80"/>
                             <line class="tree-edge" x1="200" y1="80" x2="150" y2="120"/>
@@ -1379,10 +1370,8 @@
                             <line class="tree-edge" x1="380" y1="160" x2="400" y2="200"/>
                             <line class="tree-edge" x1="400" y1="200" x2="420" y2="240"/>
                             <line class="tree-edge" x1="400" y1="200" x2="390" y2="240"/>
-                            <!-- Highlighted new vertex -->
                             <line class="tree-edge" x1="420" y1="240" x2="440" y2="280" stroke="var(--accent-amber)" stroke-width="3"/>
                             
-                            <!-- Tree vertices - properly colored -->
                             <circle class="tree-vertex-small red" cx="250" cy="40" r="8"/>
                             <circle class="tree-vertex-small blue" cx="200" cy="80" r="8"/>
                             <circle class="tree-vertex-small blue" cx="300" cy="80" r="8"/>
@@ -1402,10 +1391,8 @@
                             <circle class="tree-vertex-small red" cx="400" cy="200" r="8"/>
                             <circle class="tree-vertex-small blue" cx="420" cy="240" r="8"/>
                             <circle class="tree-vertex-small blue" cx="390" cy="240" r="8"/>
-                            <!-- Highlighted new vertex -->
                             <circle class="tree-vertex-small red" cx="440" cy="280" r="10" stroke="var(--accent-amber)" stroke-width="3"/>
                             
-                            <!-- Labels -->
                             <text x="250" y="20" text-anchor="middle" font-size="14" fill="var(--primary-color)" font-weight="600">
                                 Tree with k vertices (already 2-colored)
                             </text>
@@ -1464,12 +1451,11 @@
             </div>
         </div>
 
-        <!-- AI Practice Tab -->
         <div id="practice" class="tab-content">
             <div class="intro-section">
                 <div class="concept-explanation">
                     <h3>Interactive Proof Construction</h3>
-                    <p>Generate custom induction problems with AI assistance. First identify the base case, then arrange proof steps in logical order.</p>
+                    <p>Generate custom induction problems with AI assistance. First identify the base case, then arrange the individual sentences of the proof in logical order.</p>
                     <p style="font-size: 0.9rem; font-style: italic; color: var(--text-muted); margin-top: 1rem; opacity: 0.9;">
                         <strong>Note:</strong> The AI helper can make mistakes and may be temporarily unavailable during high traffic periods.
                     </p>
@@ -1517,13 +1503,11 @@
                         <p>The proof structure is shown below. Arrange the proof steps in the correct order:</p>
                         
                         <div class="proof-structure">
-                            <!-- Base Case Box -->
                             <div class="proof-box base-box">
-                                <div class="box-label">Base Case (n = n₀)</div>
+                                <div class="box-label">Base Case Verification</div>
                                 <div class="statement-display" id="base-statement"></div>
                             </div>
 
-                            <!-- If-Then Structure -->
                             <div class="proof-box if-then-container">
                                 <div class="if-then-label">Inductive Step</div>
                                 <div class="if-then-boxes">
@@ -1538,7 +1522,6 @@
                                 </div>
                             </div>
 
-                            <!-- Proof Steps Container -->
                             <div class="proof-box steps-container">
                                 <div class="box-label">Proof Steps (arrange in correct order)</div>
                                 <div class="sortable-container" id="proof-steps-container"></div>
@@ -1573,35 +1556,41 @@
         // Fallback problems when AI is unavailable
         const fallbackProblems = {
             'sum-formula-basic': {
-                statement: "For all positive integers n: $1 + 3 + 5 + ... + (2n-1) = n^2$",
+                statement: "For all integers $n \\ge 1$: $1 + 3 + 5 + ... + (2n-1) = n^2$",
                 baseCase: "n = 1",
                 baseValue: 1,
-                hint: "Start by verifying the base case: when n=1, the left side is just 1, and the right side is 1² = 1.",
-                steps: [
-                    "Base Case: When n = 1, LHS = 1 and RHS = 1² = 1 ✓",
-                    "Inductive Hypothesis: Assume the formula holds for n = k",
-                    "That is: 1 + 3 + 5 + ... + (2k-1) = k²",
-                    "Inductive Step: Prove for n = k+1",
-                    "LHS = 1 + 3 + 5 + ... + (2k-1) + (2(k+1)-1)",
-                    "= k² + (2k+1) by the inductive hypothesis",
-                    "= k² + 2k + 1 = (k+1)²",
-                    "Therefore the formula holds for all positive integers n ∎"
+                hint: "For the inductive step, try to isolate the expression for P(k) on the left side of P(k+1).",
+                baseCaseVerification: "For $n=1$, the statement is $1 = 1^2$, which is true.",
+                p_k: "$1 + 3 + 5 + ... + (2k-1) = k^2$",
+                p_k_plus_1: "$1 + 3 + 5 + ... + (2(k+1)-1) = (k+1)^2$",
+                proofSteps: [
+                    "Assume the statement is true for some integer $k \\ge 1$.",
+                    "Consider the left-hand side (LHS) for $n=k+1$: $1 + 3 + ... + (2k-1) + (2(k+1)-1)$.",
+                    "Using the inductive hypothesis, we can substitute $k^2$ for the sum up to $(2k-1)$.",
+                    "The expression becomes $k^2 + (2(k+1)-1)$.",
+                    "Simplifying this gives $k^2 + 2k + 1$.",
+                    "This expression factors to $(k+1)^2$, which is the right-hand side (RHS) for $n=k+1$.",
+                    "Thus, the statement holds for $n=k+1$.",
+                    "By the principle of mathematical induction, the statement is true for all $n \\ge 1$. ∎"
                 ]
             },
             'inequality-basic': {
-                statement: "For all positive integers n: $2^n > n$",
+                statement: "For all integers $n \\ge 1$: $2^n > n$",
                 baseCase: "n = 1",
                 baseValue: 1,
-                hint: "Check that 2¹ > 1, then show that if 2ᵏ > k, then 2^(k+1) > k+1.",
-                steps: [
-                    "Base Case: When n = 1, 2¹ = 2 > 1 ✓",
-                    "Inductive Hypothesis: Assume 2ᵏ > k for some k ≥ 1",
-                    "Inductive Step: Prove 2^(k+1) > k+1",
-                    "2^(k+1) = 2 · 2ᵏ",
-                    "By inductive hypothesis: 2 · 2ᵏ > 2k",
-                    "Since k ≥ 1, we have 2k ≥ k+1",
-                    "Therefore: 2^(k+1) > k+1",
-                    "The inequality holds for all positive integers n ∎"
+                hint: "After applying the inductive hypothesis, you'll have $2^{k+1} > 2k$. How can you show that $2k \\ge k+1$?",
+                baseCaseVerification: "For $n=1$, the statement is $2^1 > 1$, or $2 > 1$, which is true.",
+                p_k: "$2^k > k$",
+                p_k_plus_1: "$2^{k+1} > k+1$",
+                proofSteps: [
+                    "Assume the statement is true for some integer $k \\ge 1$, so $2^k > k$.",
+                    "Consider the case for $n=k+1$: we want to show $2^{k+1} > k+1$.",
+                    "Start with the left-hand side: $2^{k+1} = 2 \\cdot 2^k$.",
+                    "By the inductive hypothesis, since $2^k > k$, we have $2 \\cdot 2^k > 2k$.",
+                    "For $k \\ge 1$, we know that $2k = k+k \\ge k+1$.",
+                    "Combining these inequalities, we get $2^{k+1} > 2k \\ge k+1$.",
+                    "Therefore, $2^{k+1} > k+1$.",
+                    "By the principle of mathematical induction, the statement is true for all $n \\ge 1$. ∎"
                 ]
             }
         };
@@ -1771,25 +1760,26 @@
             document.getElementById('statement-display').innerHTML = 'Generating a new induction problem...';
             
             const prompt = `
-                Generate a mathematical induction problem suitable for students.
-                
-                Requirements:
+                Generate a mathematical induction problem.
                 - Type: ${statementType}
                 - Difficulty: ${difficulty}
-                - Must be provable by mathematical induction
-                - Include clear base case and inductive step
-                
-                Return ONLY valid JSON:
+
+                Return ONLY a single valid JSON object with the following structure:
                 {
-                  "statement": "the statement using LaTeX math notation $...$",
-                  "baseCase": "the base case like 'n = 1' or 'n = 0'",
-                  "baseValue": the numeric base value,
-                  "hint": "helpful hint for the proof approach",
-                  "steps": ["step1", "step2", ..., "conclusion ∎"]
+                  "statement": "The full statement to be proven, using LaTeX, like 'For all integers $n \\ge 1$: ...'",
+                  "baseCase": "A short string for the base case, like 'n = 1'",
+                  "baseValue": 1,
+                  "hint": "A short, helpful hint for the proof.",
+                  "baseCaseVerification": "A single sentence that shows the base case is true, using LaTeX. Example: 'For $n=1$, the statement is $2^1 > 1$, which is true.'",
+                  "p_k": "The mathematical expression for P(k), using LaTeX. Example: '$2^k > k$'.",
+                  "p_k_plus_1": "The mathematical expression for P(k+1), using LaTeX. Example: '$2^{k+1} > k+1$'.",
+                  "proofSteps": [
+                    "An array of strings, where each string is a single sentence in the logical flow of the inductive step proof.",
+                    "The proof should start with the assumption and end with the conclusion.",
+                    "Use LaTeX for all math.",
+                    "Example Step: 'By the inductive hypothesis, we can substitute $k^2$ for the grouped sum.'"
+                  ]
                 }
-                
-                The steps should be high-level proof steps, not detailed algebra.
-                Example: "Apply inductive hypothesis" rather than showing all algebraic manipulation.
             `;
             
             try {
@@ -1805,7 +1795,7 @@
                 console.error('AI generation failed:', error);
                 
                 // Use fallback
-                const fallbackKey = `${statementType}-${difficulty}`;
+                const fallbackKey = `${statementType}-basic`;
                 state.currentProblem = fallbackProblems[fallbackKey] || fallbackProblems['sum-formula-basic'];
                 
                 document.getElementById('statement-display').innerHTML = state.currentProblem.statement;
@@ -1814,7 +1804,7 @@
                 const warning = document.createElement('div');
                 warning.className = 'warning-notice';
                 warning.innerHTML = 'Using backup problem (AI temporarily unavailable)';
-                document.getElementById('current-problem').insertBefore(warning, document.getElementById('statement-display'));
+                document.getElementById('current-problem').insertBefore(warning, document.querySelector('#current-problem .statement'));
                 setTimeout(() => warning.remove(), 5000);
             }
             
@@ -1882,44 +1872,29 @@
         }
 
         function populateProofSteps() {
-            // Auto-fill the statement displays with just the mathematical statements
-            const baseStatement = document.getElementById('base-statement');
-            const pkStatement = document.getElementById('pk-statement');
-            const pk1Statement = document.getElementById('pk1-statement');
-            
-            // Extract the pure mathematical statement from the problem
-            // For example: "1 + 3 + 5 + ... + (2n-1) = n²"
-            const statement = state.currentProblem.statement;
-            const cleanStatement = statement.replace(/.*?(?=\$)/g, '').replace(/\$/g, '');
-            
-            // Generate P(k) and P(k+1) statements
-            baseStatement.innerHTML = `When n = ${state.currentProblem.baseValue}: ${cleanStatement.replace(/n/g, state.currentProblem.baseValue)}`;
-            pkStatement.innerHTML = cleanStatement.replace(/n/g, 'k');
-            pk1Statement.innerHTML = cleanStatement.replace(/n/g, '(k+1)');
-            
-            // Create proof steps for the sortable container
+            if (!state.currentProblem) return;
+
+            // Populate the static boxes
+            document.getElementById('base-statement').innerHTML = state.currentProblem.baseCaseVerification;
+            document.getElementById('pk-statement').innerHTML = state.currentProblem.p_k;
+            document.getElementById('pk1-statement').innerHTML = state.currentProblem.p_k_plus_1;
+
+            // Create and populate the draggable proof steps
             const container = document.getElementById('proof-steps-container');
             container.innerHTML = '';
-            
-            // Create individual proof steps (these are the actual work)
-            const proofSteps = [
-                { content: `Verify base case: ${state.currentProblem.steps[0]}`, order: 0 },
-                { content: `State hypothesis: ${state.currentProblem.steps[1]}`, order: 1 },
-                { content: `Begin inductive step: ${state.currentProblem.steps[3]}`, order: 2 },
-                { content: `Apply hypothesis: ${state.currentProblem.steps[4]}`, order: 3 },
-                { content: `Algebraic manipulation: ${state.currentProblem.steps[5]}`, order: 4 },
-                { content: `Complete the proof: ${state.currentProblem.steps[state.currentProblem.steps.length - 1]}`, order: 5 }
-            ];
-            
-            // Shuffle the steps
-            const shuffled = [...proofSteps].sort(() => Math.random() - 0.5);
-            
-            shuffled.forEach((step, index) => {
+
+            const proofStepItems = state.currentProblem.proofSteps.map((step, index) => {
+                return { content: step, order: index };
+            });
+
+            const shuffledSteps = [...proofStepItems].sort(() => Math.random() - 0.5);
+
+            shuffledSteps.forEach((item, index) => {
                 const stepEl = document.createElement('div');
                 stepEl.className = 'proof-step-item';
                 stepEl.draggable = true;
-                stepEl.innerHTML = step.content;
-                stepEl.setAttribute('data-order', step.order);
+                stepEl.innerHTML = item.content;
+                stepEl.setAttribute('data-order', item.order);
                 stepEl.setAttribute('data-id', `step-${index}`);
                 container.appendChild(stepEl);
             });
@@ -1929,14 +1904,9 @@
             // Setup drag and drop for sortable
             setupSortable();
             
-            // Typeset math
+            // Typeset all the new math content
             if (window.MathJax && window.MathJax.typesetPromise) {
-                window.MathJax.typesetPromise([
-                    baseStatement, 
-                    pkStatement, 
-                    pk1Statement, 
-                    container
-                ]);
+                window.MathJax.typesetPromise([document.getElementById('proof-construction')]);
             }
         }
 
@@ -2012,33 +1982,32 @@
             
             // Hide the original boxes with a fade effect
             document.querySelectorAll('.proof-box').forEach(box => {
+                box.style.transition = 'opacity 0.5s, transform 0.5s';
                 box.style.opacity = '0.3';
                 box.style.transform = 'scale(0.98)';
             });
             
+            const { statement, baseValue, baseCaseVerification, p_k, p_k_plus_1, proofSteps } = state.currentProblem;
+
+            // Assemble the proof steps into paragraphs
+            const proofParagraphs = proofSteps.map(step => `<p>${step}</p>`).join('');
+
             // Create the complete, textbook-style proof
             content.innerHTML = `
                 <div class="complete-proof-content">
                     <p><strong>Proof by Mathematical Induction:</strong></p>
+                    <p>We will prove that ${statement.replace(/For all integers.*?:/, '').trim()}.</p>
                     
-                    <p>We will prove that ${state.currentProblem.statement.replace(/\$/g, '')} for all positive integers n ≥ ${state.currentProblem.baseValue}.</p>
+                    <strong>Base Case (n = ${baseValue}):</strong>
+                    <p>${baseCaseVerification}</p>
                     
-                    <p><strong>Base Case (n = ${state.currentProblem.baseValue}):</strong></p>
-                    <p>${state.currentProblem.steps[0]}</p>
-                    <p>Thus, the statement holds for n = ${state.currentProblem.baseValue}. ✓</p>
+                    <strong>Inductive Step:</strong>
+                    <p>Assume the statement holds for some integer $k \\ge ${baseValue}. That is, we assume:</p>
+                    <p style="text-align:center;">${p_k}</p>
+                    <p>We must now show that the statement holds for $n = k+1$. That is, we must prove:</p>
+                    <p style="text-align:center;">${p_k_plus_1}</p>
                     
-                    <p><strong>Inductive Hypothesis:</strong></p>
-                    <p>${state.currentProblem.steps[1]} ${state.currentProblem.steps[2]}</p>
-                    
-                    <p><strong>Inductive Step:</strong></p>
-                    <p>We must prove that P(k+1) is true, that is:</p>
-                    <p>${state.currentProblem.steps[3]}</p>
-                    
-                    <p>Starting from the left-hand side and using our inductive hypothesis:</p>
-                    <p>${state.currentProblem.steps.slice(4, -1).join('</p><p>')}</p>
-                    
-                    <p><strong>Conclusion:</strong></p>
-                    <p>${state.currentProblem.steps[state.currentProblem.steps.length - 1]}</p>
+                    ${proofParagraphs}
                     
                     <div class="qed">∎</div>
                 </div>
@@ -2071,12 +2040,14 @@
             }
             
             const hints = [
-                "Start by verifying the base case - show the statement is true for the smallest value.",
-                "After the base case, state your inductive hypothesis clearly.",
-                "The inductive step should start by stating what you need to prove.",
-                "Use the inductive hypothesis to transform P(k+1) into something involving P(k).",
-                "Complete the algebraic steps to show P(k+1) follows from P(k).",
-                "End with a clear conclusion about what you've proven."
+                "The proof should always begin by stating the assumption (the inductive hypothesis).",
+                "After the assumption, clearly state what you intend to prove for the k+1 case.",
+                "Start with the more complex side of the P(k+1) equation and try to simplify it.",
+                "Look for a way to use the P(k) assumption. You almost always substitute it into the P(k+1) expression.",
+                "The next steps usually involve algebraic simplification.",
+                "Keep manipulating the expression until it matches the other side of the P(k+1) equation.",
+                "Your second to last step should explicitly show that the LHS equals the RHS of P(k+1).",
+                "The final step is always the concluding sentence based on the principle of induction."
             ];
             
             // Find which step is out of place
