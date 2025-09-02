@@ -1549,8 +1549,6 @@
         let state = {
             currentProblem: null,
             draggedElement: null,
-            testResults: {},
-            animationTimeout: null,
         };
 
         // Fallback problems when AI is unavailable
@@ -1657,22 +1655,15 @@
             const chain = document.getElementById('addition-cards');
             const propertyBox = document.getElementById('addition-property');
             
-            // Only the first card can be clicked and turns red
             if (n === 1) {
                 const card = chain.querySelector(`[data-n="1"]`);
                 card.classList.add('error');
-                
-                // Show the property box explaining why it fails
                 propertyBox.style.display = 'block';
-                
-                // Typeset math
                 if (window.MathJax && window.MathJax.typesetPromise) {
                     window.MathJax.typesetPromise([propertyBox]);
                 }
             }
         }
-
-
 
         // Example toggle in formal tab
         function showExample(type) {
@@ -1693,13 +1684,12 @@
                 sumExample.style.display = 'none';
             }
             
-            // Typeset math
             if (window.MathJax && window.MathJax.typesetPromise) {
                 window.MathJax.typesetPromise([document.querySelector('#formal .intro-section')]);
             }
         }
 
-       // AI integration for practice problems
+        // AI integration for practice problems
         async function callAI(prompt, maxRetries = 2) {
             for (let attempt = 0; attempt <= maxRetries; attempt++) {
                 try {
@@ -1737,44 +1727,17 @@
         }
 
         function extractJSON(text) {
-            let data;
-            
             try {
-                data = JSON.parse(text);
+                return JSON.parse(text);
             } catch {
-                // Try to find JSON in the response
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
                 if (!jsonMatch) {
                     throw new Error('No JSON found in response');
                 }
-                
-                const cleaned = jsonMatch[0]
-                    .replace(/```json\s*/g, '')
-                    .replace(/```\s*/g, '')
-                    .trim();
-                
-                try {
-                    data = JSON.parse(cleaned);
-                } catch (e) {
-                    throw new Error('Invalid JSON format');
-                }
+                return JSON.parse(jsonMatch[0]);
             }
-            
-            // Validate required fields
-            const required = ['statement', 'baseCase', 'baseValue', 'baseCaseVerification', 'p_k', 'p_k_plus_1', 'proofSteps'];
-            for (const field of required) {
-                if (!(field in data)) {
-                    throw new Error(`Missing required field: ${field}`);
-                }
-            }
-            
-            // Ensure proofSteps is an array
-            if (!Array.isArray(data.proofSteps)) {
-                throw new Error('proofSteps must be an array');
-            }
-            
-            return data;
         }
+
         async function generateProblem() {
             const statementType = document.getElementById('statement-type').value;
             const difficulty = document.getElementById('difficulty').value;
@@ -1785,6 +1748,8 @@
             
             document.getElementById('current-problem').style.display = 'block';
             document.getElementById('statement-display').innerHTML = 'Generating a new induction problem...';
+             // Clear any old warnings
+            document.querySelectorAll('.warning-notice').forEach(n => n.remove());
             
             const prompt = `
                 Generate a mathematical induction problem.
@@ -1821,24 +1786,24 @@
             } catch (error) {
                 console.error('AI generation failed:', error);
                 
-                // Use fallback
-                const fallbackKey = `${statementType}-basic`;
+                const fallbackKey = `${statementType}-basic`; // Simplified fallback key
                 state.currentProblem = fallbackProblems[fallbackKey] || fallbackProblems['sum-formula-basic'];
                 
                 document.getElementById('statement-display').innerHTML = state.currentProblem.statement;
                 
-                // Show warning
+                // Show warning notice
                 const warning = document.createElement('div');
                 warning.className = 'warning-notice';
-                warning.innerHTML = 'Using backup problem (AI temporarily unavailable)';
-                document.getElementById('current-problem').insertBefore(warning, document.querySelector('#current-problem .statement'));
-                setTimeout(() => warning.remove(), 5000);
+                warning.innerHTML = '⚠️ Using backup problem (AI temporarily unavailable)';
+                const problemContainer = document.getElementById('current-problem');
+                problemContainer.insertBefore(warning, problemContainer.firstChild);
+
+                setTimeout(() => { if (warning) warning.remove(); }, 5000);
             }
             
             generateBtn.disabled = false;
             generateBtn.textContent = 'Generate Problem with AI';
             
-            // Typeset math
             if (window.MathJax && window.MathJax.typesetPromise) {
                 window.MathJax.typesetPromise([document.getElementById('statement-display')]);
             }
@@ -1856,7 +1821,6 @@
             
             feedbackDiv.style.display = 'block';
             
-            // Check if user input contains the correct base value
             const hasCorrectValue = userInput.includes(correctValue.toString()) || 
                                     userInput.includes(`n = ${correctValue}`) || 
                                     userInput.includes(`n=${correctValue}`);
@@ -1871,28 +1835,23 @@
                 document.getElementById('proof-construction').style.display = 'block';
                 populateProofSteps();
             } else {
-                // Provide hints instead of giving the answer
                 feedbackDiv.className = 'feedback-display info';
-                const userValue = parseInt(userInput.match(/\d+/)?.[0]);
+                const userValue = parseInt(userInput.match(/-?\d+/)?.[0]);
                 
                 if (isNaN(userValue)) {
                     feedbackDiv.innerHTML = `
                         <strong>Hint:</strong><br>
-                        Look for the smallest positive integer where the statement should hold.
-                        Try testing n = 1, n = 0, or n = 2.
+                        Look for the smallest integer where the statement holds. Try n = 0, n = 1, etc.
                     `;
                 } else if (userValue < correctValue) {
                     feedbackDiv.innerHTML = `
                         <strong>Too small!</strong><br>
-                        Check if the statement actually makes sense for n = ${userValue}.
-                        Try a slightly larger value.
+                        The statement might not hold for n = ${userValue}. Try a larger value.
                     `;
                 } else if (userValue > correctValue) {
                     feedbackDiv.innerHTML = `
-                        <strong>Too large!</strong><br>
-                        While the statement is true for n = ${userValue}, 
-                        there's a smaller value where it also holds. 
-                        Remember, we want the smallest such value.
+                        <strong>Correct, but not the base case!</strong><br>
+                        While the statement is true for n = ${userValue}, we need the smallest value.
                     `;
                 }
             }
@@ -1901,12 +1860,10 @@
         function populateProofSteps() {
             if (!state.currentProblem) return;
 
-            // Populate the static boxes
             document.getElementById('base-statement').innerHTML = state.currentProblem.baseCaseVerification;
             document.getElementById('pk-statement').innerHTML = state.currentProblem.p_k;
             document.getElementById('pk1-statement').innerHTML = state.currentProblem.p_k_plus_1;
 
-            // Create and populate the draggable proof steps
             const container = document.getElementById('proof-steps-container');
             container.innerHTML = '';
 
@@ -1927,11 +1884,8 @@
             });
             
             document.getElementById('complete-proof').style.display = 'none';
-            
-            // Setup drag and drop for sortable
             setupSortable();
             
-            // Typeset all the new math content
             if (window.MathJax && window.MathJax.typesetPromise) {
                 window.MathJax.typesetPromise([document.getElementById('proof-construction')]);
             }
@@ -1939,11 +1893,10 @@
 
         function setupSortable() {
             const container = document.getElementById('proof-steps-container');
-            let draggedElement = null;
             
             container.addEventListener('dragstart', (e) => {
                 if (e.target.classList.contains('proof-step-item')) {
-                    draggedElement = e.target;
+                    state.draggedElement = e.target;
                     e.target.classList.add('dragging');
                 }
             });
@@ -1959,9 +1912,9 @@
                 const afterElement = getDragAfterElement(container, e.clientY);
                 
                 if (afterElement == null) {
-                    container.appendChild(draggedElement);
+                    container.appendChild(state.draggedElement);
                 } else {
-                    container.insertBefore(draggedElement, afterElement);
+                    container.insertBefore(state.draggedElement, afterElement);
                 }
             });
         }
@@ -1999,7 +1952,7 @@
             if (isCorrect) {
                 showCompleteProof();
             } else {
-                alert('Not quite right! Check the logical flow of your proof. Steps that are in the correct position will turn green.');
+                alert('Not quite right! Check the logical flow. Correctly placed steps are highlighted in green.');
             }
         }
 
@@ -2007,7 +1960,6 @@
             const completeProof = document.getElementById('complete-proof');
             const content = document.getElementById('complete-proof-content');
             
-            // Hide the original boxes with a fade effect
             document.querySelectorAll('.proof-box').forEach(box => {
                 box.style.transition = 'opacity 0.5s, transform 0.5s';
                 box.style.opacity = '0.3';
@@ -2015,11 +1967,8 @@
             });
             
             const { statement, baseValue, baseCaseVerification, p_k, p_k_plus_1, proofSteps } = state.currentProblem;
-
-            // Assemble the proof steps into paragraphs
             const proofParagraphs = proofSteps.map(step => `<p>${step}</p>`).join('');
 
-            // Create the complete, textbook-style proof
             content.innerHTML = `
                 <div class="complete-proof-content">
                     <p><strong>Proof by Mathematical Induction:</strong></p>
@@ -2043,20 +1992,17 @@
             completeProof.style.display = 'block';
             completeProof.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
-            // Typeset math
             if (window.MathJax && window.MathJax.typesetPromise) {
                 window.MathJax.typesetPromise([content]);
             }
         }
 
         function resetProofStructure() {
-            // Reset opacity of boxes
             document.querySelectorAll('.proof-box').forEach(box => {
                 box.style.opacity = '1';
                 box.style.transform = 'scale(1)';
             });
             
-            // Re-populate and shuffle steps
             populateProofSteps();
         }
 
@@ -2077,7 +2023,6 @@
                 "The final step is always the concluding sentence based on the principle of induction."
             ];
             
-            // Find which step is out of place
             const container = document.getElementById('proof-steps-container');
             const steps = container.querySelectorAll('.proof-step-item');
             let firstWrong = -1;
