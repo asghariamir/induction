@@ -1727,15 +1727,43 @@
         }
 
         function extractJSON(text) {
+            let data;
+            
             try {
-                return JSON.parse(text);
+                data = JSON.parse(text);
             } catch {
+                // Try to find JSON in the response
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
                 if (!jsonMatch) {
                     throw new Error('No JSON found in response');
                 }
-                return JSON.parse(jsonMatch[0]);
+                
+                const cleaned = jsonMatch[0]
+                    .replace(/```json\s*/g, '')
+                    .replace(/```\s*/g, '')
+                    .trim();
+                
+                try {
+                    data = JSON.parse(cleaned);
+                } catch (e) {
+                    throw new Error('Invalid JSON format');
+                }
             }
+            
+            // Validate required fields
+            const required = ['statement', 'baseCase', 'baseValue', 'baseCaseVerification', 'p_k', 'p_k_plus_1', 'proofSteps'];
+            for (const field of required) {
+                if (!(field in data)) {
+                    throw new Error(`Missing required field: ${field}`);
+                }
+            }
+            
+            // Ensure proofSteps is an array
+            if (!Array.isArray(data.proofSteps)) {
+                throw new Error('proofSteps must be an array');
+            }
+            
+            return data;
         }
 
         async function generateProblem() {
