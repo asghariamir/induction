@@ -986,6 +986,27 @@
         .mjx-chtml {
             margin: 0.2em 0 !important;
         }
+
+        /* MathPal animations */
+        @keyframes thinking {
+            0%, 80%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            40% {
+                transform: scale(1.5);
+                opacity: 0.5;
+            }
+        }
+
+        .robot-eye {
+            animation: robot-blink 5s infinite;
+        }
+
+        @keyframes robot-blink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0.1; }
+        }
     </style>
 </head>
 <body>
@@ -1248,91 +1269,139 @@
         </div>
 
         <div id="practice" class="tab-content">
+            <!-- MathPal Disclosure Banner -->
+            <div style="background: var(--interactive-bg); border: 2px solid var(--primary-color); border-radius: 12px; padding: 1rem; margin: 2rem auto; max-width: 800px; display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+                <svg width="40" height="40" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="45" fill="#e6fffb"/>
+                    <rect x="35" y="60" width="30" height="25" fill="#0f766e" rx="3"/>
+                    <rect x="30" y="35" width="40" height="30" fill="#10b981" rx="8"/>
+                    <line x1="50" y1="35" x2="50" y2="25" stroke="#0f766e" stroke-width="2"/>
+                    <circle cx="50" cy="23" r="3" fill="#f59e0b"/>
+                    <circle cx="40" cy="47" r="5" fill="white"/>
+                    <circle cx="60" cy="47" r="5" fill="white"/>
+                    <circle cx="40" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                    <circle cx="60" cy="47" r="3" fill="#0f766e" class="robot-eye"/>
+                    <path d="M 40 55 Q 50 60 60 55" stroke="#0f766e" stroke-width="2" fill="none"/>
+                </svg>
+                <div style="text-align: left;">
+                    <div style="font-weight: 600; color: var(--primary-color); font-size: 1.1rem;">
+                        MathPal - Your AI Study Buddy
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--text-muted);">
+                        Learns alongside you • Can make mistakes • May be occasionally unavailable
+                    </div>
+                </div>
+            </div>
+
             <div class="intro-section">
+                <h2 style="text-align: center; color: var(--primary-color); margin-bottom: 1rem;">🤝 Practice with MathPal</h2>
+
                 <div class="concept-explanation">
-                    <h3>Interactive Proof Construction</h3>
-                    <p>Generate custom induction problems with AI assistance. First identify the base case, then arrange the individual sentences of the proof in logical order.</p>
-                    <p style="font-size: 0.9rem; font-style: italic; color: var(--text-muted); margin-top: 1rem; opacity: 0.9;">
-                        <strong>Note:</strong> The AI helper can make mistakes and may be temporarily unavailable during high traffic periods.
-                    </p>
+                    <p>Work through induction problems with MathPal as your study buddy. MathPal will give you hints and work alongside you, not teach from above.</p>
                 </div>
 
-                <div class="practice-controls">
-                    <div class="control-group">
-                        <label for="statement-type">Statement Type</label>
-                        <select id="statement-type">
-                            <option value="sum-formula">Sum Formula</option>
-                            <option value="inequality">Inequality</option>
-                            <option value="divisibility">Divisibility</option>
-                            <option value="sequence">Sequence Property</option>
-                        </select>
-                    </div>
-                    <div class="control-group">
-                        <label for="difficulty">Difficulty</label>
-                        <select id="difficulty">
-                            <option value="basic">Basic</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advanced">Advanced</option>
-                        </select>
-                    </div>
-                    <button class="generate-btn" id="generate-problem" onclick="generateProblem()">
-                        Generate Problem with AI
-                    </button>
+                <!-- Problem Generation -->
+                <div style="text-align: center; margin: 2rem 0;">
+                    <button class="generate-btn" onclick="generateMathPalProblem()">🎲 Generate New Problem</button>
                 </div>
 
-                <div id="current-problem" class="current-problem" style="display: none;">
-                    <h4>Current Problem</h4>
-                    <div class="statement" id="statement-display"></div>
-                    
-                    <div class="base-case-practice">
-                        <h5>Step 1: Identify the Base Case</h5>
-                        <p>What is the smallest value of n for which this statement should be true?</p>
-                        <div class="base-case-input">
-                            <input type="text" id="base-case-input" placeholder="Enter base case value (e.g., n = 1)">
-                            <button id="check-base-case" onclick="checkBaseCase()">Check Base Case</button>
-                        </div>
-                        <div id="base-case-feedback" class="feedback-display" style="display: none;"></div>
-                    </div>
+                <!-- Current Problem Display -->
+                <div class="statement" id="mathpal-problem-statement" style="display: none; margin: 2rem 0;">
+                    <!-- Problem will appear here -->
+                </div>
 
-                    <div id="proof-construction" class="proof-construction" style="display: none;">
-                        <h5>Step 2: Build the Induction Proof</h5>
-                        <p>The proof structure is shown below. Arrange the proof steps in the correct order:</p>
-                        
-                        <div class="proof-structure">
-                            <div class="proof-box base-box">
-                                <div class="box-label">Base Case Verification</div>
-                                <div class="statement-display" id="base-statement"></div>
+                <!-- MathPal Workspace -->
+                <div id="mathpal-workspace" style="display: none;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0;">
+                        <!-- Your Work Panel -->
+                        <div style="background: white; border: 2px solid var(--border-color); border-radius: 12px; padding: 1.5rem; min-height: 300px;">
+                            <h3 style="color: var(--primary-color); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">📝 Your Work</h3>
+                            
+                            <!-- Base Case Input -->
+                            <div>
+                                <label style="font-weight: 600;">Find the Base Case:</label>
+                                <input type="text" id="mathpal-base-input" style="width: 100%; padding: 0.75rem; font-size: 1rem; border: 2px solid var(--border-color); border-radius: 6px; margin: 0.5rem 0;" placeholder="e.g., n = 1 or n = 0">
+                                <button class="generate-btn" onclick="checkMathPalBaseCase()" style="margin-top: 0.5rem;">
+                                    ✓ Check Base Case
+                                </button>
                             </div>
+                            
+                            <!-- Feedback Display -->
+                            <div id="mathpal-base-feedback" class="feedback-display info" style="display: none; margin-top: 1rem;">
+                                <!-- Feedback will appear here -->
+                            </div>
+                        </div>
 
+                        <!-- MathPal's Panel -->
+                        <div style="background: white; border: 2px solid var(--border-color); border-radius: 12px; padding: 1.5rem; min-height: 300px;">
+                            <h3 style="color: var(--primary-color); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border-color);">🤖 MathPal's Thinking</h3>
+                            
+                            <!-- Hint Buttons -->
+                            <div style="display: flex; gap: 0.5rem; margin: 1rem 0; flex-wrap: wrap;">
+                                <button style="padding: 0.5rem 1rem; background: white; border: 2px solid var(--primary-color); border-radius: 999px; color: var(--primary-color); cursor: pointer; font-size: 0.9rem;" onclick="getMathPalHint('nudge')">💭 Nudge</button>
+                                <button style="padding: 0.5rem 1rem; background: white; border: 2px solid var(--primary-color); border-radius: 999px; color: var(--primary-color); cursor: pointer; font-size: 0.9rem;" onclick="getMathPalHint('observation')">🔍 Observation</button>
+                                <button style="padding: 0.5rem 1rem; background: white; border: 2px solid var(--primary-color); border-radius: 999px; color: var(--primary-color); cursor: pointer; font-size: 0.9rem;" onclick="getMathPalHint('collaborate')">🤝 Collaborate</button>
+                                <button style="padding: 0.5rem 1rem; background: white; border: 2px solid var(--primary-color); border-radius: 999px; color: var(--primary-color); cursor: pointer; font-size: 0.9rem;" onclick="getMathPalHint('reveal')">💡 Reveal</button>
+                            </div>
+                            
+                            <!-- MathPal Response Area -->
+                            <div id="mathpal-response" style="background: var(--interactive-bg); border-left: 3px solid var(--primary-color); padding: 1rem; border-radius: 6px; margin-top: 1rem; min-height: 80px;">
+                                <div style="color: var(--text-muted); font-style: italic;">
+                                    Click a hint button to get MathPal's help!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Proof Construction Section -->
+                    <div id="mathpal-proof-construction" class="proof-construction" style="display: none;">
+                        <h5>Step 2: Build the Proof with MathPal</h5>
+                        <div class="proof-structure">
+                            <div class="proof-box">
+                                <div class="box-label">Base Case (verified ✓)</div>
+                                <div class="statement-display" id="mathpal-base-statement">
+                                    <!-- Base case will be shown here -->
+                                </div>
+                            </div>
+                            
                             <div class="proof-box if-then-container">
                                 <div class="if-then-label">Inductive Step</div>
                                 <div class="if-then-boxes">
                                     <div class="if-box">
                                         <div class="box-label">Assume P(k):</div>
-                                        <div class="statement-display" id="pk-statement"></div>
+                                        <div class="statement-display" id="mathpal-pk-statement">
+                                            <!-- P(k) statement -->
+                                        </div>
                                     </div>
                                     <div class="then-box">
                                         <div class="box-label">Prove P(k+1):</div>
-                                        <div class="statement-display" id="pk1-statement"></div>
+                                        <div class="statement-display" id="mathpal-pk1-statement">
+                                            <!-- P(k+1) statement -->
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <div class="proof-box steps-container">
-                                <div class="box-label">Proof Steps (arrange in correct order)</div>
-                                <div class="sortable-container" id="proof-steps-container"></div>
+                                <div class="box-label">Arrange the proof steps in logical order:</div>
+                                <div class="sortable-container" id="mathpal-proof-steps-container">
+                                    <!-- Draggable proof steps will be added here -->
+                                </div>
+                                
+                                <div class="proof-controls">
+                                    <button class="proof-btn check" onclick="checkMathPalProofStructure()">✓ Check Proof</button>
+                                    <button class="proof-btn reset" onclick="resetMathPalProofStructure()">↺ Shuffle Again</button>
+                                    <button class="proof-btn hint" onclick="showMathPalProofHint()">💡 Hint</button>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="proof-controls">
-                            <button class="proof-btn hint" onclick="showProofHint()">💡 Hint</button>
-                            <button class="proof-btn check" onclick="checkProofStructure()">✅ Check Proof</button>
-                            <button class="proof-btn reset" onclick="resetProofStructure()">🔄 Reset</button>
-                        </div>
-
-                        <div class="complete-proof" id="complete-proof" style="display: none;">
-                            <h5>✨ Complete Proof by Mathematical Induction</h5>
-                            <div id="complete-proof-content" class="complete-proof-content"></div>
+                    <!-- Complete Proof Display -->
+                    <div id="mathpal-complete-proof" class="complete-proof" style="display: none;">
+                        <h5>✨ Complete Proof</h5>
+                        <div id="mathpal-complete-proof-content" class="complete-proof-content">
+                            <!-- Complete proof will be shown here -->
                         </div>
                     </div>
                 </div>
@@ -1345,6 +1414,8 @@
         let state = {
             currentProblem: null,
             draggedElement: null,
+            mathpalProblem: null,
+            isWaitingForAI: false
         };
 
         // Fallback problems when AI is unavailable
@@ -1388,6 +1459,430 @@
                 ]
             }
         };
+
+        // MathPal problems for variety
+        const mathpalProblems = [
+            {
+                statement: "For all integers $n \\ge 1$: $1 + 2 + 3 + ... + n = \\frac{n(n+1)}{2}$",
+                baseValue: 1,
+                baseCase: "n = 1",
+                baseCaseVerification: "When $n = 1$: LHS = $1$, RHS = $\\frac{1(1+1)}{2} = \\frac{2}{2} = 1$. Since LHS = RHS, the base case holds.",
+                p_k: "$1 + 2 + ... + k = \\frac{k(k+1)}{2}$",
+                p_k_plus_1: "$1 + 2 + ... + k + (k+1) = \\frac{(k+1)(k+2)}{2}$",
+                proofSteps: [
+                    "Starting with the left side of P(k+1): $1 + 2 + ... + k + (k+1)$",
+                    "By the inductive hypothesis, we can substitute: $\\frac{k(k+1)}{2} + (k+1)$",
+                    "Factor out $(k+1)$: $(k+1)\\left(\\frac{k}{2} + 1\\right)$",
+                    "Simplify inside the parentheses: $(k+1)\\left(\\frac{k+2}{2}\\right)$",
+                    "This equals $\\frac{(k+1)(k+2)}{2}$, which is the right side of P(k+1).",
+                    "Therefore, by mathematical induction, the formula holds for all $n \\ge 1$."
+                ],
+                hint: "Start by substituting the inductive hypothesis into the left side of P(k+1)."
+            },
+            {
+                statement: "For all integers $n \\ge 0$: $2^0 + 2^1 + 2^2 + ... + 2^n = 2^{n+1} - 1$",
+                baseValue: 0,
+                baseCase: "n = 0",
+                baseCaseVerification: "When $n = 0$: LHS = $2^0 = 1$, RHS = $2^{0+1} - 1 = 2 - 1 = 1$. Since LHS = RHS, the base case holds.",
+                p_k: "$2^0 + 2^1 + ... + 2^k = 2^{k+1} - 1$",
+                p_k_plus_1: "$2^0 + 2^1 + ... + 2^k + 2^{k+1} = 2^{k+2} - 1$",
+                proofSteps: [
+                    "Starting with the left side of P(k+1): $2^0 + 2^1 + ... + 2^k + 2^{k+1}$",
+                    "By the inductive hypothesis: $(2^{k+1} - 1) + 2^{k+1}$",
+                    "Combine like terms: $2 \\cdot 2^{k+1} - 1$",
+                    "Simplify using exponent rules: $2^{k+2} - 1$",
+                    "This is exactly the right side of P(k+1).",
+                    "Therefore, by mathematical induction, the formula holds for all $n \\ge 0$."
+                ],
+                hint: "Remember that $2 \\cdot 2^{k+1} = 2^{k+2}$ by the laws of exponents."
+            }
+        ];
+
+        // MathPal AI Integration
+        async function callMathPalAI(prompt) {
+            showMathPalThinking();
+            
+            const mathpalPrompt = `You are MathPal, a friendly peer study buddy (not a teacher).
+Speak casually like a classmate: "I got...", "I tried...", "Want to see?", "Hmm, I think..."
+${prompt}
+Keep responses to 2-3 sentences, very conversational.
+Use $ for inline LaTeX math. Reference the student's specific input when possible.
+Never use teacher language like "correct" or "good job" - instead say things like "yeah, same here!" or "I got that too!"`;
+            
+            for (let attempt = 0; attempt <= 2; attempt++) {
+                try {
+                    if (attempt > 0) {
+                        await new Promise(resolve => setTimeout(resolve, 1000 * attempt));
+                    }
+                    
+                    const response = await fetch('/api/gemini', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            contents: [{ 
+                                role: "user", 
+                                parts: [{ text: mathpalPrompt }] 
+                            }] 
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                    
+                    if (!text) {
+                        throw new Error('Empty response');
+                    }
+                    
+                    hideMathPalThinking();
+                    return text;
+                    
+                } catch (error) {
+                    console.error(`Attempt ${attempt + 1} failed:`, error);
+                    if (attempt === 2) {
+                        hideMathPalThinking();
+                        return getMathPalFallback();
+                    }
+                }
+            }
+        }
+
+        function showMathPalThinking() {
+            state.isWaitingForAI = true;
+            const responseDiv = document.getElementById('mathpal-response');
+            if (responseDiv) {
+                responseDiv.innerHTML = `
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0.3rem; color: var(--text-muted); font-style: italic;">
+                        MathPal is thinking
+                        <span style="width: 6px; height: 6px; background: var(--primary-color); border-radius: 50%; animation: thinking 1.4s infinite ease-in-out;"></span>
+                        <span style="width: 6px; height: 6px; background: var(--primary-color); border-radius: 50%; animation: thinking 1.4s infinite ease-in-out; animation-delay: 0.2s;"></span>
+                        <span style="width: 6px; height: 6px; background: var(--primary-color); border-radius: 50%; animation: thinking 1.4s infinite ease-in-out; animation-delay: 0.4s;"></span>
+                    </div>
+                `;
+            }
+        }
+
+        function hideMathPalThinking() {
+            state.isWaitingForAI = false;
+        }
+
+        function getMathPalFallback() {
+            const fallbacks = [
+                "Hmm, I'm having trouble connecting right now. Want to work through this step by step together?",
+                "My connection's a bit wonky. Let's figure this out together - what part are you stuck on?",
+                "Can't seem to connect properly. But hey, we can still work on this! Where should we start?"
+            ];
+            return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+        }
+
+        // MathPal specific functions
+        function generateMathPalProblem() {
+            const problemIndex = Math.floor(Math.random() * mathpalProblems.length);
+            state.mathpalProblem = mathpalProblems[problemIndex];
+            
+            // Display problem
+            document.getElementById('mathpal-problem-statement').style.display = 'block';
+            document.getElementById('mathpal-problem-statement').innerHTML = `
+                <strong>Prove by induction:</strong><br>
+                ${state.mathpalProblem.statement}
+            `;
+            
+            // Show workspace
+            document.getElementById('mathpal-workspace').style.display = 'block';
+            
+            // Reset sections
+            document.getElementById('mathpal-base-input').value = '';
+            document.getElementById('mathpal-base-feedback').style.display = 'none';
+            document.getElementById('mathpal-proof-construction').style.display = 'none';
+            document.getElementById('mathpal-complete-proof').style.display = 'none';
+            document.getElementById('mathpal-response').innerHTML = `
+                <div style="color: var(--text-muted); font-style: italic;">
+                    Click a hint button to get MathPal's help!
+                </div>
+            `;
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([document.getElementById('mathpal-problem-statement')]);
+            }
+        }
+
+        async function checkMathPalBaseCase() {
+            const userInput = document.getElementById('mathpal-base-input').value.toLowerCase().trim();
+            const feedbackDiv = document.getElementById('mathpal-base-feedback');
+            
+            feedbackDiv.style.display = 'block';
+            
+            const correctValue = state.mathpalProblem.baseValue;
+            const hasCorrectValue = userInput.includes(`${correctValue}`) || 
+                                    userInput.includes(`n=${correctValue}`) ||
+                                    userInput.includes(`n = ${correctValue}`) ||
+                                    userInput.includes(`n= ${correctValue}`) ||
+                                    userInput.includes(`n =${correctValue}`);
+            
+            if (hasCorrectValue) {
+                feedbackDiv.className = 'feedback-display success';
+                feedbackDiv.innerHTML = `
+                    <strong>Correct!</strong><br>
+                    Base case: ${state.mathpalProblem.baseCase}<br>
+                    Now let's construct the complete proof!
+                `;
+                document.getElementById('mathpal-proof-construction').style.display = 'block';
+                populateMathPalProofSteps();
+                
+                // Get MathPal's celebration
+                const prompt = `The student correctly identified the base case as n = ${correctValue} for the induction proof.
+                React like a peer who also got it right. Be encouraging about moving to the inductive step.`;
+                const response = await callMathPalAI(prompt);
+                document.getElementById('mathpal-response').innerHTML = `<div style="line-height: 1.6;">${response}</div>`;
+                
+            } else {
+                feedbackDiv.className = 'feedback-display info';
+                const userValue = parseInt(userInput.match(/-?\d+/)?.[0]);
+                
+                if (isNaN(userValue)) {
+                    feedbackDiv.innerHTML = `
+                        <strong>Hint:</strong><br>
+                        Look for the smallest integer where the statement holds. Try n = 0, n = 1, etc.
+                    `;
+                } else if (userValue < correctValue) {
+                    feedbackDiv.innerHTML = `
+                        <strong>Too small!</strong><br>
+                        The statement might not hold for n = ${userValue}. Try a larger value.
+                    `;
+                } else if (userValue > correctValue) {
+                    feedbackDiv.innerHTML = `
+                        <strong>Correct, but not the base case!</strong><br>
+                        While the statement is true for n = ${userValue}, we need the smallest value.
+                    `;
+                }
+            }
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([feedbackDiv]);
+            }
+        }
+
+        async function getMathPalHint(level) {
+            if (state.isWaitingForAI) return;
+            if (!state.mathpalProblem) {
+                alert('Please generate a problem first!');
+                return;
+            }
+            
+            const responseDiv = document.getElementById('mathpal-response');
+            let prompt = '';
+            
+            switch(level) {
+                case 'nudge':
+                    prompt = `The student is working on proving: ${state.mathpalProblem.statement}
+                    Give them a very gentle nudge about finding the base case - just a casual hint about where to start looking.
+                    Don't give the answer, just point them in the right direction.`;
+                    break;
+                    
+                case 'observation':
+                    prompt = `The student is proving: ${state.mathpalProblem.statement}
+                    The base case is n = ${state.mathpalProblem.baseValue}.
+                    Make an observation about what makes this the right starting point, but don't solve it for them.
+                    Talk about what to look for when finding base cases.`;
+                    break;
+                    
+                case 'collaborate':
+                    prompt = `The student is proving: ${state.mathpalProblem.statement}
+                    The base case is n = ${state.mathpalProblem.baseValue}.
+                    Work through checking if the formula holds for n = ${state.mathpalProblem.baseValue} together.
+                    Show your work but let them finish the verification.`;
+                    break;
+                    
+                case 'reveal':
+                    prompt = `The student is proving: ${state.mathpalProblem.statement}
+                    Share that the base case is n = ${state.mathpalProblem.baseValue} and show why:
+                    ${state.mathpalProblem.baseCaseVerification}
+                    Be encouraging about moving on to the inductive step.`;
+                    break;
+            }
+            
+            const response = await callMathPalAI(prompt);
+            responseDiv.innerHTML = `<div style="line-height: 1.6;">${response}</div>`;
+            
+            // Render any LaTeX in the response
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([responseDiv]);
+            }
+        }
+
+        function populateMathPalProofSteps() {
+            if (!state.mathpalProblem) return;
+
+            document.getElementById('mathpal-base-statement').innerHTML = state.mathpalProblem.baseCaseVerification;
+            document.getElementById('mathpal-pk-statement').innerHTML = state.mathpalProblem.p_k;
+            document.getElementById('mathpal-pk1-statement').innerHTML = state.mathpalProblem.p_k_plus_1;
+
+            const container = document.getElementById('mathpal-proof-steps-container');
+            container.innerHTML = '';
+
+            const proofStepItems = state.mathpalProblem.proofSteps.map((step, index) => {
+                return { content: step, order: index };
+            });
+
+            const shuffledSteps = [...proofStepItems].sort(() => Math.random() - 0.5);
+
+            shuffledSteps.forEach((item, index) => {
+                const stepEl = document.createElement('div');
+                stepEl.className = 'proof-step-item';
+                stepEl.draggable = true;
+                stepEl.innerHTML = item.content;
+                stepEl.setAttribute('data-order', item.order);
+                stepEl.setAttribute('data-id', `mathpal-step-${index}`);
+                container.appendChild(stepEl);
+            });
+            
+            setupMathPalSortable();
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([document.getElementById('mathpal-proof-construction')]);
+            }
+        }
+
+        function setupMathPalSortable() {
+            const container = document.getElementById('mathpal-proof-steps-container');
+            
+            container.addEventListener('dragstart', (e) => {
+                if (e.target.classList.contains('proof-step-item')) {
+                    state.draggedElement = e.target;
+                    e.target.classList.add('dragging');
+                }
+            });
+            
+            container.addEventListener('dragend', (e) => {
+                if (e.target.classList.contains('proof-step-item')) {
+                    e.target.classList.remove('dragging');
+                }
+            });
+            
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                const afterElement = getDragAfterElement(container, e.clientY);
+                
+                if (afterElement == null) {
+                    container.appendChild(state.draggedElement);
+                } else {
+                    container.insertBefore(state.draggedElement, afterElement);
+                }
+            });
+        }
+
+        async function checkMathPalProofStructure() {
+            const container = document.getElementById('mathpal-proof-steps-container');
+            const steps = container.querySelectorAll('.proof-step-item');
+            
+            let isCorrect = true;
+            steps.forEach((step, index) => {
+                const expectedOrder = parseInt(step.getAttribute('data-order'));
+                if (expectedOrder !== index) {
+                    isCorrect = false;
+                    step.classList.remove('correct-position');
+                } else {
+                    step.classList.add('correct-position');
+                }
+            });
+            
+            if (isCorrect) {
+                showMathPalCompleteProof();
+                
+                // Get MathPal's congratulations
+                const prompt = `The student successfully completed the induction proof! 
+                React like a peer who also just finished the same proof. Be excited but casual.`;
+                const response = await callMathPalAI(prompt);
+                document.getElementById('mathpal-response').innerHTML = `<div style="line-height: 1.6;">${response}</div>`;
+                
+            } else {
+                alert('Not quite right! Check the logical flow. Correctly placed steps are highlighted in green.');
+            }
+        }
+
+        function showMathPalCompleteProof() {
+            const completeProof = document.getElementById('mathpal-complete-proof');
+            const content = document.getElementById('mathpal-complete-proof-content');
+            
+            const { statement, baseValue, baseCaseVerification, p_k, p_k_plus_1, proofSteps } = state.mathpalProblem;
+            const proofParagraphs = proofSteps.map(step => `<p>${step}</p>`).join('');
+
+            content.innerHTML = `
+                <p><strong>Proof by Mathematical Induction:</strong></p>
+                <p>We will prove that ${statement.replace(/For all integers.*?:/, '').trim()}.</p>
+                
+                <strong>Base Case (n = ${baseValue}):</strong>
+                <p>${baseCaseVerification}</p>
+                
+                <strong>Inductive Step:</strong>
+                <p>Assume the statement holds for some integer $k \\ge ${baseValue}$. That is, we assume:</p>
+                <p style="text-align:center;">${p_k}</p>
+                <p>We must now show that the statement holds for $n = k+1$. That is, we must prove:</p>
+                <p style="text-align:center;">${p_k_plus_1}</p>
+                
+                ${proofParagraphs}
+                
+                <div style="text-align: right; font-size: 1.2rem; font-weight: bold; color: var(--primary-color); margin-top: 1rem;">∎</div>
+            `;
+            
+            completeProof.style.display = 'block';
+            completeProof.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([content]);
+            }
+        }
+
+        function resetMathPalProofStructure() {
+            populateMathPalProofSteps();
+        }
+
+        async function showMathPalProofHint() {
+            if (!state.mathpalProblem) {
+                alert('Please generate a problem first!');
+                return;
+            }
+            
+            const hints = [
+                "The proof should always begin by stating the assumption (the inductive hypothesis).",
+                "After the assumption, clearly state what you intend to prove for the k+1 case.",
+                "Start with the more complex side of the P(k+1) equation and try to simplify it.",
+                "Look for a way to use the P(k) assumption. You almost always substitute it into the P(k+1) expression.",
+                "The next steps usually involve algebraic simplification.",
+                "Keep manipulating the expression until it matches the other side of the P(k+1) equation.",
+                "Your second to last step should explicitly show that the LHS equals the RHS of P(k+1).",
+                "The final step is always the concluding sentence based on the principle of induction."
+            ];
+            
+            const container = document.getElementById('mathpal-proof-steps-container');
+            const steps = container.querySelectorAll('.proof-step-item');
+            let firstWrong = -1;
+            
+            steps.forEach((step, index) => {
+                const expectedOrder = parseInt(step.getAttribute('data-order'));
+                if (expectedOrder !== index && firstWrong === -1) {
+                    firstWrong = index;
+                }
+            });
+            
+            if (firstWrong >= 0 && firstWrong < hints.length) {
+                alert(hints[firstWrong]);
+                
+                // Also get MathPal's hint about the proof structure
+                const prompt = `The student is arranging proof steps for an induction proof.
+                They need help with step ${firstWrong + 1}. Give a casual hint about: "${hints[firstWrong]}"
+                Don't give the full answer, just a friendly pointer.`;
+                const response = await callMathPalAI(prompt);
+                document.getElementById('mathpal-response').innerHTML = `<div style="line-height: 1.6;">${response}</div>`;
+                
+            } else {
+                alert(`Remember: ${state.mathpalProblem.hint}`);
+            }
+        }
+
 
         // DOM references
         const tabButtons = document.querySelectorAll('.tab-button');
