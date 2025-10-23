@@ -1579,11 +1579,142 @@ Never use teacher language like "correct" or "good job" - instead say things lik
         }
 
         // MathPal specific functions
-        function generateMathPalProblem() {
-            const problemIndex = Math.floor(Math.random() * mathpalProblems.length);
-            state.mathpalProblem = mathpalProblems[problemIndex];
+        async function generateMathPalProblem() {
+            // Try to generate a new problem using AI
+            const problemTypes = ['sum', 'squares', 'geometric', 'divisibility', 'inequality'];
+            const selectedType = problemTypes[Math.floor(Math.random() * problemTypes.length)];
             
-            // Display problem
+            const aiPrompt = `Generate a mathematical induction problem for students. Type: ${selectedType}
+            
+            Return ONLY a valid JSON object in this exact format (no text before or after):
+            {
+                "statement": "For all integers n ≥ [starting value]: [mathematical statement with LaTeX]",
+                "baseValue": [number],
+                "baseCase": "n = [number]",
+                "baseCaseVerification": "When n = [value]: LHS = [calculation], RHS = [calculation]. Since LHS = RHS, the base case holds.",
+                "p_k": "[P(k) statement with LaTeX]",
+                "p_k_plus_1": "[P(k+1) statement with LaTeX]",
+                "proofSteps": [
+                    "Step 1 of the proof...",
+                    "Step 2 of the proof...",
+                    "Step 3 of the proof...",
+                    "Step 4 of the proof...",
+                    "Step 5 of the proof...",
+                    "Final conclusion by mathematical induction."
+                ],
+                "hint": "A helpful hint for students..."
+            }
+            
+            Use $ for LaTeX math. Make it different from standard textbook examples.
+            Examples of good problems:
+            - Sum: 2 + 4 + 6 + ... + 2n = n(n+1)
+            - Squares: 1² + 3² + 5² + ... + (2n-1)² = n(2n-1)(2n+1)/3
+            - Geometric: 3^0 + 3^1 + ... + 3^n = (3^(n+1) - 1)/2
+            - Divisibility: 4^n - 1 is divisible by 3
+            - Inequality: n! > 2^n for n ≥ 4
+            
+            DO NOT OUTPUT ANYTHING OTHER THAN VALID JSON.`;
+            
+            try {
+                const response = await callMathPalAI(aiPrompt);
+                if (response && !response.includes("having trouble connecting")) {
+                    // Clean up the response to extract JSON
+                    let cleanResponse = response;
+                    
+                    // Remove any markdown code blocks
+                    cleanResponse = cleanResponse.replace(/```json\n?/g, '').replace(/```\n?/g, '');
+                    
+                    // Find the JSON object in the response
+                    const jsonMatch = cleanResponse.match(/\{[\s\S]*\}/);
+                    if (jsonMatch) {
+                        const aiProblem = JSON.parse(jsonMatch[0]);
+                        
+                        // Validate the problem has all required fields
+                        if (aiProblem.statement && aiProblem.baseValue !== undefined && 
+                            aiProblem.baseCaseVerification && aiProblem.p_k && 
+                            aiProblem.p_k_plus_1 && aiProblem.proofSteps && 
+                            Array.isArray(aiProblem.proofSteps) && aiProblem.proofSteps.length > 0) {
+                            
+                            state.mathpalProblem = aiProblem;
+                            console.log('Successfully generated AI problem:', aiProblem);
+                        } else {
+                            console.log('AI problem missing fields, using fallback');
+                            throw new Error('Incomplete problem structure');
+                        }
+                    } else {
+                        console.log('No valid JSON found in AI response');
+                        throw new Error('Invalid JSON response');
+                    }
+                } else {
+                    console.log('AI unavailable, using fallback');
+                    throw new Error('AI unavailable');
+                }
+            } catch (error) {
+                console.error('Failed to generate AI problem:', error);
+                // Fall back to rotating through more varied preset problems
+                const extendedProblems = [
+                    ...mathpalProblems,
+                    {
+                        statement: "For all integers $n \\ge 1$: $1^3 + 2^3 + 3^3 + ... + n^3 = \\left[\\frac{n(n+1)}{2}\\right]^2$",
+                        baseValue: 1,
+                        baseCase: "n = 1",
+                        baseCaseVerification: "When $n = 1$: LHS = $1^3 = 1$, RHS = $\\left[\\frac{1 \\cdot 2}{2}\\right]^2 = 1^2 = 1$. Since LHS = RHS, the base case holds.",
+                        p_k: "$1^3 + 2^3 + ... + k^3 = \\left[\\frac{k(k+1)}{2}\\right]^2$",
+                        p_k_plus_1: "$1^3 + 2^3 + ... + k^3 + (k+1)^3 = \\left[\\frac{(k+1)(k+2)}{2}\\right]^2$",
+                        proofSteps: [
+                            "Starting with the left side of P(k+1): $1^3 + 2^3 + ... + k^3 + (k+1)^3$",
+                            "By the inductive hypothesis: $\\left[\\frac{k(k+1)}{2}\\right]^2 + (k+1)^3$",
+                            "Factor: $\\frac{k^2(k+1)^2}{4} + (k+1)^3$",
+                            "Factor out $(k+1)^2$: $(k+1)^2\\left[\\frac{k^2}{4} + (k+1)\\right]$",
+                            "Simplify: $(k+1)^2\\left[\\frac{k^2 + 4k + 4}{4}\\right] = \\frac{(k+1)^2(k+2)^2}{4}$",
+                            "This equals $\\left[\\frac{(k+1)(k+2)}{2}\\right]^2$, proving P(k+1)."
+                        ],
+                        hint: "Remember that the sum of cubes equals the square of the sum!"
+                    },
+                    {
+                        statement: "For all integers $n \\ge 1$: $n^3 + 2n$ is divisible by 3",
+                        baseValue: 1,
+                        baseCase: "n = 1",
+                        baseCaseVerification: "When $n = 1$: $1^3 + 2(1) = 1 + 2 = 3$, which is divisible by 3.",
+                        p_k: "$k^3 + 2k$ is divisible by 3",
+                        p_k_plus_1: "$(k+1)^3 + 2(k+1)$ is divisible by 3",
+                        proofSteps: [
+                            "Expand $(k+1)^3 + 2(k+1)$",
+                            "$(k+1)^3 + 2(k+1) = k^3 + 3k^2 + 3k + 1 + 2k + 2$",
+                            "Rearrange: $(k^3 + 2k) + 3k^2 + 3k + 3$",
+                            "Factor: $(k^3 + 2k) + 3(k^2 + k + 1)$",
+                            "By the inductive hypothesis, $k^3 + 2k$ is divisible by 3",
+                            "The term $3(k^2 + k + 1)$ is clearly divisible by 3",
+                            "Therefore, $(k+1)^3 + 2(k+1)$ is divisible by 3."
+                        ],
+                        hint: "Expand $(k+1)^3$ and look for terms divisible by 3."
+                    },
+                    {
+                        statement: "For all integers $n \\ge 4$: $2^n > n^2$",
+                        baseValue: 4,
+                        baseCase: "n = 4",
+                        baseCaseVerification: "When $n = 4$: $2^4 = 16$ and $4^2 = 16$. Actually, $2^4 = n^2$, so we need $n \\ge 5$. When $n = 5$: $2^5 = 32 > 25 = 5^2$.",
+                        p_k: "$2^k > k^2$ for $k \\ge 5$",
+                        p_k_plus_1: "$2^{k+1} > (k+1)^2$ for $k \\ge 5$",
+                        proofSteps: [
+                            "Start with $2^{k+1} = 2 \\cdot 2^k$",
+                            "By the inductive hypothesis: $2 \\cdot 2^k > 2k^2$",
+                            "Need to show: $2k^2 > (k+1)^2 = k^2 + 2k + 1$",
+                            "This requires: $k^2 > 2k + 1$",
+                            "Rearranging: $k^2 - 2k - 1 > 0$",
+                            "For $k \\ge 5$: $25 - 10 - 1 = 14 > 0$, and this gap increases with k",
+                            "Therefore, $2^{k+1} > (k+1)^2$ holds."
+                        ],
+                        hint: "Show that $2k^2 > (k+1)^2$ for sufficiently large k."
+                    }
+                ];
+                
+                // Select a random problem from the extended set
+                const problemIndex = Math.floor(Math.random() * extendedProblems.length);
+                state.mathpalProblem = extendedProblems[problemIndex];
+            }
+            
+            // Display the problem (whether AI-generated or fallback)
             document.getElementById('mathpal-problem-statement').style.display = 'block';
             document.getElementById('mathpal-problem-statement').innerHTML = `
                 <strong>Prove by induction:</strong><br>
